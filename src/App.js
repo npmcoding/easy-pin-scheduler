@@ -14,7 +14,20 @@ class App extends Component {
     this.successfulAuth = this.successfulAuth.bind(this);
   }
 
+componentDidMount() {
+  //check local storage for user data
+  const currentUser = localStorage.getItem('EPS_User');
+
+  if(currentUser) {
+    this.setState({
+      user:currentUser,
+      isAuthenticated: true
+    })
+  }
+}
+
   successfulAuth(user) {
+    // write user data to local storage, then set state
     this.setState({
       user,
       isAuthenticated: true,
@@ -22,7 +35,7 @@ class App extends Component {
   }
 
   render() {
-    // maybe check cookies here? If cookis exist, populate user. 
+    // maybe check cookies here? If cookies exist, populate user. 
     // maybe this should be in the mounting phase
     if (this.state.isAuthenticated) {
       return (
