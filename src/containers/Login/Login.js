@@ -34,16 +34,14 @@ export default ({ setUserHasAuthenticated, history }) => {
                     <ControlLabel>Email</ControlLabel>
                     <FormControl
                         autoFocus
-                        id="email"
                         type="email"
                         value={email}
                         onChange={handleFieldChange}
                     />
                 </FormGroup>
-                <FormGroup>
+                <FormGroup controlId="password" bsSize="large">
                     <ControlLabel>Password</ControlLabel>
                     <FormControl
-                        id="password"
                         value={password}
                         onChange={handleFieldChange}
                         type="password"
