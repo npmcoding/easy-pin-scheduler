@@ -5,8 +5,8 @@ export default {
         BUCKET: "easy-pin-scheduler"
     },
     apiGateway: {
-        REGION: "https://1w1s2iy56d.execute-api.us-east-2.amazonaws.com/dev",
-        URL: "us-east-2"
+        REGION: "us-east-2",
+        URL: "https://1w1s2iy56d.execute-api.us-east-2.amazonaws.com/dev"
     },
     cognito: {
         REGION: "us-east-2",
