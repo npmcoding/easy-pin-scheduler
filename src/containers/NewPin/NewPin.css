@@ -1,0 +1,8 @@
+.newpin form {
+    padding-bottom: 15px;
+}
+
+.newpin form textarea {
+    height: 150px;
+    font-size: 24px;
+}
