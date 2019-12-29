@@ -3,9 +3,10 @@ import { API, Storage } from "aws-amplify";
 import { FormGroup, FormControl, ControlLabel } from "react-bootstrap";
 import LoaderButton from "../../components/LoaderButton/LoaderButton";
 import config from "../../config";
+import { s3Upload, s3Remove } from "../../libs/awsLib";
 import "./ScheduledPin.css";
 
-const ScheduledPin = ({ match }) => {
+const ScheduledPin = ({ match, history }) => {
     const file = useRef(null);
     const [pin, setPin] = useState(null);
     const [content, setContent] = useState("");
@@ -38,10 +39,14 @@ const ScheduledPin = ({ match }) => {
 
     const handleFileChange = e => file.current = e.target.files[0];
 
-    const handleSubmit = event => {
+    const savePin = pin => {
+        return API.put("scheduledPins", `/scheduledPins/${match.params.id}`, { body: pin });
+    }
+
+    const handleSubmit = async e => {
         let attachment;
 
-        event.preventDefault();
+        e.preventDefault();
 
         if (file.current && file.current.size > config.MAX_ATTACHMENT_SIZE) {
             alert(
@@ -51,10 +56,33 @@ const ScheduledPin = ({ match }) => {
         }
 
         setIsLoading(true);
+
+        try {
+            if (file.current) {
+
+                if (pin.attachment) {
+                    //const key = `${pin.userId}/${pin.attachment}`;
+                    await s3Remove(pin.attachment);
+                }
+
+                attachment = await s3Upload(file.current);
+            }
+
+            await savePin({
+                content,
+                attachment: attachment || pin.attachment
+            });
+            history.push("/");
+        } catch (e) {
+            alert(e);
+            setIsLoading(false);
+        }
     }
 
-    const handleDelete = event => {
-        event.preventDefault();
+    const deletePin = () => API.del("scheduledPins", `/scheduledPins/${match.params.id}`);
+
+    const handleDelete = async e => {
+        e.preventDefault();
 
         const confirmed = window.confirm(
             "Are you sure you want to delete this scheduled pin?"
@@ -63,6 +91,14 @@ const ScheduledPin = ({ match }) => {
         if (!confirmed) return;
 
         setIsDeleting(true);
+
+        try {
+            await deletePin();
+            history.push("/");
+        } catch (e) {
+            alert(e);
+            setIsDeleting(false);
+        }
     }
 
     return (

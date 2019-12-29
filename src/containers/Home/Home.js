@@ -29,7 +29,7 @@ const Home = ({ isAuthenticated }) => {
     const fetchPins = () => API.get("scheduledPins", "/scheduledPins");
 
     const renderPinsList = pins => {
-        console.log(pins);
+        // console.log(pins);
     return [{}].concat(pins).map((pin, i) => 
             i !== 0 ? (
                 <LinkContainer key={pin.scheduledPinId} to={`/scheduledPins/${pin.scheduledPinId}`}>
