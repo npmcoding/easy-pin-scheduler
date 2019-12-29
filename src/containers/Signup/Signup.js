@@ -10,7 +10,7 @@ import LoaderButton from "../../components/LoaderButton/LoaderButton";
 import { useFormFields } from "../../libs/hooksLib";
 import "./Signup.css";
 
-export default ({ setUserHasAuthenticated, history }) => {
+const Signup = ({ setUserHasAuthenticated, history }) => {
     const [{ email, password, confirmPassword, confirmationCode }, handleFieldChange] = useFormFields({
         email: "",
         password: "",
@@ -140,3 +140,5 @@ export default ({ setUserHasAuthenticated, history }) => {
         </div>
     );
 }
+
+export default Signup;

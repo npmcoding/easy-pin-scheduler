@@ -7,7 +7,7 @@ import Signup from "./containers/Signup/Signup";
 import NewPin from "./containers/NewPin/NewPin";
 import NotFound from "./containers/NotFound/NotFound";
 
-export default ({appProps}) =>
+const Routes = ({ appProps }) =>
     <Switch>
         <AppliedRoute path="/" exact component={Home} appProps={appProps} />
         <AppliedRoute path="/login" exact component={Login} appProps={appProps} />
@@ -16,3 +16,5 @@ export default ({appProps}) =>
         { /* Finally, catch all unmatched routes */}
         <Route component={NotFound} />
     </Switch>;
+
+export default Routes;

@@ -1,11 +1,13 @@
 import React, { useRef, useState } from "react";
 import { FormGroup, FormControl, ControlLabel } from "react-bootstrap";
 import { API } from "aws-amplify";
+import { s3Upload } from "../../libs/awsLib";
 import LoaderButton from "../../components/LoaderButton/LoaderButton";
 import config from "../../config";
 import "./NewPin.css";
 
-export default ({ history }) => {
+
+const NewPin = ({ history }) => {
     const file = useRef(null);
     const [content, setContent] = useState("");
     const [isLoading, setIsLoading] = useState(false);
@@ -14,6 +16,8 @@ export default ({ history }) => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+
+        console.log(file.current);
 
         if (file.current && file.current.size > config.MAX_ATTACHMENT_SIZE) {
             alert(
@@ -25,7 +29,11 @@ export default ({ history }) => {
         setIsLoading(true);
 
         try {
-            await createPin({ content });
+            const attachment = file.current
+                ? await s3Upload(file.current)
+                : null;
+
+            await createPin({ content, attachment });
             history.push("/");
         } catch (e) {
             console.log(e);
@@ -68,3 +76,5 @@ export default ({ history }) => {
         </div>
     )
 }
+
+export default NewPin;
