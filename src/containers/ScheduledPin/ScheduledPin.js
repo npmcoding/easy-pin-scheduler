@@ -106,6 +106,7 @@ const ScheduledPin = ({ match, history }) => {
             {pin && (
                 <form onSubmit={handleSubmit}>
                     <FormGroup controlId="content">
+                        <ControlLabel>Caption</ControlLabel>
                         <FormControl
                             value={content}
                             componentClass="textarea"
