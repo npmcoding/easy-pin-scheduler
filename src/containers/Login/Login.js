@@ -5,7 +5,7 @@ import LoaderButton from "../../components/LoaderButton/LoaderButton";
 import { useFormFields } from "../../libs/hooksLib";
 import './Login.css';
 
-const Login = ({ setUserHasAuthenticated, history }) => {
+const Login = ({ setUserHasAuthenticated }) => {
 
     const [isLoading, setIsLoading] = useState(false);
     const [{ email, password }, handleFieldChange] = useFormFields({
@@ -20,7 +20,6 @@ const Login = ({ setUserHasAuthenticated, history }) => {
         try {
             await Auth.signIn(email, password);
             setUserHasAuthenticated(true);
-            history.push("/");
         } catch (err) {
             alert(err.message);
             setIsLoading(false);

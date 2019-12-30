@@ -20,13 +20,29 @@ export const AuthenticatedRoute = ({ component: ControlLabel, appProps, location
 }
 
 export const UnauthenticatedRoute = ({ component: C, appProps, ...rest }) => {
+    const redirect = querystring("redirect");
     return (
         <Route
             {...rest}
             render={props =>
                 !appProps.isAuthenticated
                     ? <C {...props} {...appProps} />
-                    : <Redirect to="/" />}
+                    : <Redirect
+                        to={redirect === "" || redirect === null ? "/" : redirect}
+                    />}
         />
     );
+}
+
+const querystring = (name, url = window.location.href) => {
+    name = name.replace(/[[]]/g, "\\$&");
+
+    const regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)", "i");
+    const results = regex.exec(url);
+
+    if (!results) return null;
+
+    if (!results[2]) return "";
+
+    return decodeURIComponent(results[2].replace(/\+/g, " "));
 }
