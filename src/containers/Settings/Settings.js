@@ -1,32 +1,46 @@
-import React from "react";
+import React, {useState} from "react";
 import { Button, ControlLabel, FormGroup } from "react-bootstrap";
 
 const Settings = () => {
 
-    const onClick = () => {
+    const { login, getSession, logout } = window.PDK;
+
+    const [isConnected, setIsConnected] = useState(!!getSession());
+
+    const onConnectClick = () => {
         const scope = "write_public,write_private,read_relationships,write_relationships"
-        window.PDK.login({ scope }, (accessToken) => console.log(accessToken));
+        login({ scope }, (accessToken) => {
+                setIsConnected(!!accessToken);
+            })
+    }
+
+    const onDisconnectClick = () => {
+        logout();
+        setIsConnected(false);
     }
 
     return (
 
         <div className="settings">
-            <FormGroup>
-                <ControlLabel>Log in to Pinterest</ControlLabel>
-                <Button
-                    className="pinterest-login"
-                    onClick={onClick}>
-                    Login
-            </Button>
-            </FormGroup>
-            <FormGroup>
-                <ControlLabel>Check yo self</ControlLabel>
-                <Button
-                    className="pinterest-check"
-                    onClick={() => console.log(window.PDK.getSession())}>
-                    Do it
-            </Button>
-            </FormGroup>
+            {isConnected ? (
+                <FormGroup>
+                    <ControlLabel>Disconnect your Pinterest account</ControlLabel>
+                    <Button
+                        className="pinterest-logout"
+                        onClick={onDisconnectClick}>
+                        Disconnect
+                    </Button>
+                </FormGroup>
+                ) : (
+                    <FormGroup>
+                        <ControlLabel>Connect your Pinterest account</ControlLabel>
+                        <Button
+                            className="pinterest-login"
+                            onClick={onConnectClick}>
+                            Connect
+                        </Button>
+                    </FormGroup>
+                )}
         </div>
     )
 }
