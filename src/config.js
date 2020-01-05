@@ -1,5 +1,6 @@
 export default {
     MAX_ATTACHMENT_SIZE: 5000000,
+    PINTEREST_APP_ID: "4988587254885678740",
     s3: {
         REGION: "us-east-2",
         BUCKET: "easy-pin-scheduler"

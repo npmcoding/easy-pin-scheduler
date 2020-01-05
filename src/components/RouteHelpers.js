@@ -5,7 +5,7 @@ export const AppliedRoute = ({ component: C, appProps, ...rest }) => {
     return <Route {...rest} render={props => <C {...props} {...appProps} />} />
 }
 
-export const AuthenticatedRoute = ({ component: ControlLabel, appProps, location, ...rest }) => {
+export const AuthenticatedRoute = ({ component: C, appProps, location, ...rest }) => {
     return (
         <Route
             {...rest}

@@ -6,6 +6,7 @@ import Login from "./containers/Login/Login";
 import Signup from "./containers/Signup/Signup";
 import NewPin from "./containers/NewPin/NewPin";
 import ScheduledPin from "./containers/ScheduledPin/ScheduledPin";
+import Settings from "./containers/Settings/Settings";
 import NotFound from "./containers/NotFound/NotFound";
 
 const Routes = ({ appProps }) =>
@@ -15,6 +16,7 @@ const Routes = ({ appProps }) =>
         <UnauthenticatedRoute path="/signup" exact component={Signup} appProps={appProps} />
         <AuthenticatedRoute path="/pins/new" exact component={NewPin} appProps={appProps} />
         <AuthenticatedRoute path="/scheduledPins/:id" exact component={ScheduledPin} appProps={appProps} />
+        <AuthenticatedRoute path="/settings" exact component={Settings} appProps={appProps} />
         { /* Finally, catch all unmatched routes */}
         <Route component={NotFound} />
     </Switch>;

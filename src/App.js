@@ -5,11 +5,16 @@ import { Nav, Navbar, NavItem } from "react-bootstrap";
 import { LinkContainer } from "react-router-bootstrap";
 import "./App.css";
 import Routes from "./Routes";
+import config from "./config"
 
 const App = ({history}) => {
 
   const [isAuthenticating, setIsAuthenticating] = useState(true);
   const [isAuthenticated, setUserHasAuthenticated] = useState(false);
+
+  
+
+window.PDK.init({ appId: config.PINTEREST_APP_ID, cookie: true });
 
   //const [user, setUser] = useState(null);
 
@@ -49,9 +54,16 @@ const App = ({history}) => {
         </Navbar.Header>
         <Navbar.Collapse>
           <Nav pullRight>
-            {isAuthenticated
-              ? <NavItem onClick={handleLogout}>Logout</NavItem>
-              : <>
+            {isAuthenticated ? (
+              <>
+              <LinkContainer to="/settings">
+                <NavItem>Settings</NavItem>
+              </LinkContainer>
+ <NavItem onClick={handleLogout}>Logout</NavItem>
+ </>
+            )
+              : ( 
+              <>
                 <LinkContainer to="/signup">
                   <NavItem>Signup</NavItem>
                 </LinkContainer>
@@ -59,7 +71,7 @@ const App = ({history}) => {
                   <NavItem>Login</NavItem>
                 </LinkContainer>
               </>
-            }
+              )}
           </Nav>
         </Navbar.Collapse>
       </Navbar>
