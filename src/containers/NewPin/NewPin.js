@@ -1,5 +1,5 @@
-import React, { useRef, useState } from "react";
-import { FormGroup, FormControl, ControlLabel } from "react-bootstrap";
+import React, { useRef, useState, useEffect } from "react";
+import { FormGroup, FormControl, ControlLabel, DropdownButton, Dropdown } from "react-bootstrap";
 import { API } from "aws-amplify";
 import { s3Upload } from "../../libs/awsLib";
 import LoaderButton from "../../components/LoaderButton/LoaderButton";
@@ -11,6 +11,30 @@ const NewPin = ({ history }) => {
     const file = useRef(null);
     const [content, setContent] = useState("");
     const [isLoading, setIsLoading] = useState(false);
+
+    const [boards, setBoards] = useState([]);
+    const [loadingBoards, setLoadingBoards] = useState(true);
+
+    useEffect(() => {
+        const loadBoards = async () => {
+
+            try {
+                await window.PDK.me('boards', { fields: 'id,name' }, b => {
+                    console.log(b);
+                    if (b.error) {
+                        alert('Could not fetch boards. Try again later');
+                    }
+                    else {
+                        setBoards(b.data)
+                    }
+                });
+            } catch (e) {
+                alert('board fetching error', e);
+            }
+            setLoadingBoards(false);
+        }
+        loadBoards()
+    }, []);
 
     const handleFileChange = e => file.current = e.target.files[0];
 
@@ -51,6 +75,16 @@ const NewPin = ({ history }) => {
     return (
         <div className="newpin">
             <form onSubmit={handleSubmit}>
+                <DropdownButton id="dropdown-basic-button" title="Choose a board" disabled={loadingBoards}>
+                    {boards && boards.length && boards.map(b => (
+                        <Dropdown.Item
+                            as="button"
+                            eventKey={b.id}
+                            onClick={() => { }}>
+                            {b.name}
+                        </Dropdown.Item>
+                    ))}
+                </DropdownButton>
                 <FormGroup controlId="content">
                     <ControlLabel>Caption</ControlLabel>
                     <FormControl

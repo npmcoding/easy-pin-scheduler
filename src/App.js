@@ -16,8 +16,6 @@ const App = ({history}) => {
 
 window.PDK.init({ appId: config.PINTEREST_APP_ID, cookie: true });
 
-  //const [user, setUser] = useState(null);
-
   useEffect(() => {
    onLoad();
   }, []);

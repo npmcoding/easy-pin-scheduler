@@ -8,7 +8,7 @@ const Settings = () => {
     const [isConnected, setIsConnected] = useState(!!getSession());
 
     const onConnectClick = () => {
-        const scope = "write_public,write_private,read_relationships,write_relationships"
+        const scope = "read_public, write_public"
         login({ scope }, (accessToken) => {
                 setIsConnected(!!accessToken);
             })
