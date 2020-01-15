@@ -1,9 +1,10 @@
-import React, { useRef, useState, useEffect } from "react";
+import React, { useRef, useState, useEffect, useContext } from "react";
 import { FormGroup, FormControl, ControlLabel, DropdownButton, Dropdown } from "react-bootstrap";
 import { API } from "aws-amplify";
 import { s3Upload } from "../../libs/awsLib";
 import LoaderButton from "../../components/LoaderButton/LoaderButton";
 import config from "../../config";
+import {UserContext} from '../../components/UserContext';
 import "./NewPin.css";
 
 
@@ -12,8 +13,11 @@ const NewPin = ({ history }) => {
     const [content, setContent] = useState("");
     const [isLoading, setIsLoading] = useState(false);
 
-    const [boards, setBoards] = useState([]);
+    //const [boards, setBoards] = useState([]);
     const [loadingBoards, setLoadingBoards] = useState(true);
+
+    const {userData, setUserData} = useContext(UserContext);
+    console.log(userData);
 
     useEffect(() => {
         const loadBoards = async () => {
@@ -25,7 +29,7 @@ const NewPin = ({ history }) => {
                         alert('Could not fetch boards. Try again later');
                     }
                     else {
-                        setBoards(b.data)
+                        setUserData({...userData, boards: b.data})
                     }
                 });
             } catch (e) {
@@ -33,7 +37,10 @@ const NewPin = ({ history }) => {
             }
             setLoadingBoards(false);
         }
-        loadBoards()
+        if(userData.boards === undefined) {
+        // loadBoards()
+        setUserData({...userData, boards:[{id: "574701671138706368", name: "Test"}]})
+        }
     }, []);
 
     const handleFileChange = e => file.current = e.target.files[0];
@@ -76,8 +83,9 @@ const NewPin = ({ history }) => {
         <div className="newpin">
             <form onSubmit={handleSubmit}>
                 <DropdownButton id="dropdown-basic-button" title="Choose a board" disabled={loadingBoards}>
-                    {boards && boards.length && boards.map(b => (
+                    {userData.boards && userData.boards.length && userData.boards.map(b => (
                         <Dropdown.Item
+                            key={b.id}
                             as="button"
                             eventKey={b.id}
                             onClick={() => { }}>
