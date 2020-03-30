@@ -6,3 +6,7 @@
     height: 150px;
     font-size: 24px;
 }
+
+.newpin label[for='board'] {
+    display: block;
+}

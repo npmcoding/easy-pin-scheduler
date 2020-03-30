@@ -1,5 +1,6 @@
 import React, {useState} from "react";
 import { Button, ControlLabel, FormGroup } from "react-bootstrap";
+import "./Settings.css"
 
 const Settings = () => {
 
