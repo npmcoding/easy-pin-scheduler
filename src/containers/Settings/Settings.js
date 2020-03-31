@@ -1,5 +1,7 @@
-import React, {useState} from "react";
+import React, { useState } from "react";
+import { LinkContainer } from "react-router-bootstrap";
 import { Button, ControlLabel, FormGroup } from "react-bootstrap";
+import LoaderButton from "../../components/LoaderButton/LoaderButton";
 import "./Settings.css"
 
 const Settings = () => {
@@ -11,8 +13,8 @@ const Settings = () => {
     const onConnectClick = () => {
         const scope = "read_public, write_public"
         login({ scope }, (accessToken) => {
-                setIsConnected(!!accessToken);
-            })
+            setIsConnected(!!accessToken);
+        })
     }
 
     const onDisconnectClick = () => {
@@ -23,25 +25,32 @@ const Settings = () => {
     return (
 
         <div className="settings">
-            {isConnected ? (
-                <FormGroup>
-                    <ControlLabel>Disconnect your Pinterest account</ControlLabel>
-                    <Button
-                        className="pinterest-logout"
-                        onClick={onDisconnectClick}>
-                        Disconnect
-                    </Button>
-                </FormGroup>
-                ) : (
+            <div>
+                {isConnected ? (
                     <FormGroup>
-                        <ControlLabel>Connect your Pinterest account</ControlLabel>
+                        <ControlLabel>Disconnect your Pinterest account</ControlLabel>
                         <Button
-                            className="pinterest-login"
-                            onClick={onConnectClick}>
-                            Connect
-                        </Button>
+                            className="pinterest-logout"
+                            onClick={onDisconnectClick}>
+                            Disconnect
+                    </Button>
                     </FormGroup>
-                )}
+                ) : (
+                        <FormGroup>
+                            <ControlLabel>Connect your Pinterest account</ControlLabel>
+                            <Button
+                                className="pinterest-login"
+                                onClick={onConnectClick}>
+                                Connect
+                        </Button>
+                        </FormGroup>
+                    )}
+            </div>
+            <div>
+                <LinkContainer to="/settings/password">
+                    <LoaderButton block bsSize="large" text="Change Password" />
+                </LinkContainer>
+            </div>
         </div>
     )
 }
