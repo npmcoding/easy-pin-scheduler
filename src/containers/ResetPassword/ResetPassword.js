@@ -54,7 +54,7 @@ const ResetPassword = () => {
         <form onSubmit={handleSendCodeClick}>
             <FormGroup bsSize="large" controlId="email">
                 <ControlLabel>Email</ControlLabel>
-                <FormControl autoFocus type="email" value={email} onChange={setEmail} />
+                <FormControl autoFocus type="email" value={email} onChange={e => setEmail(e.target.value)} />
             </FormGroup>
             <LoaderButton block type="submit" bsSize="large" loadingText="Sending..." text="Send Confirmation" isLoading={isSendingCode} />
         </form>
@@ -64,17 +64,17 @@ const ResetPassword = () => {
         <form onSubmit={handleConfirmClick}>
             <FormGroup bsSize="large" controlId="code">
                 <ControlLabel>Confirmation Code</ControlLabel>
-                <FormControl autoFocus type="tel" value={code} onChange={setCode} />
+                <FormControl autoFocus type="tel" value={code} onChange={e => setCode(e.target.value)} />
                 <HelpBlock>Please check your email ({email}) for the confirmation code.</HelpBlock>
             </FormGroup>
             <hr />
             <FormGroup bsSize="large" controlId="password">
                 <ControlLabel>New Password</ControlLabel>
-                <FormControl type="password" value={password} onChange={setPassword} />
+                <FormControl type="password" value={password} onChange={e => setPassword(e.target.value)} />
             </FormGroup>
             <FormGroup bsSize="large" controlId="confirmPassword">
                 <ControlLabel>Confirm Password</ControlLabel>
-                <FormControl type="password" value={confirmPassword} onChange={setConfirmPassword} />
+                <FormControl type="password" value={confirmPassword} onChange={e => setConfirmPassword(e.target.value)} />
             </FormGroup>
             <LoaderButton block type="submit" bsSize="large" text="Confirm" loadingText="Confirm..." isLoading={isConfirming} />
         </form>
