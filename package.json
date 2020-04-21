@@ -13,10 +13,11 @@
     "react-scripts": "^3.4.1"
   },
   "scripts": {
-    "start": "set HTTPS=true&&react-scripts start",
+    "start": "set HTTPS=true&&set BROWSER=chrome&&react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "prestart": "cp -f ./cert/server.pem ./node_modules/webpack-dev-server/ssl || :"
   },
   "eslintConfig": {
     "extends": "react-app"
@@ -26,10 +27,10 @@
     "not dead",
     "not ie <= 11",
     "not op_mini all"
-  ]
   ],
   "devDependencies": {
     "eslint": "^6.8.0",
     "eslint-plugin-react": "^7.19.0"
   },
+  "proxy": "https://localhost:3000"
 }
