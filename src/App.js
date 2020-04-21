@@ -13,9 +13,16 @@ const App = ({ history }) => {
   const [isAuthenticating, setIsAuthenticating] = useState(true);
   const [isAuthenticated, setUserHasAuthenticated] = useState(false);
 
-
-
-  window.PDK.init({ appId: config.PINTEREST_APP_ID, cookie: true });
+  const scriptLoaded = () => window.PDK.init({ appId: config.PINTEREST_APP_ID, cookie: true });
+  
+  useEffect(() => {
+    const script = document.createElement("script");
+    script.src = "https://assets.pinterest.com/sdk/sdk.js";
+    script.async = true;
+    script.onload = () => scriptLoaded();
+  
+    document.body.appendChild(script);
+  });
 
   useEffect(() => {
     onLoad();
