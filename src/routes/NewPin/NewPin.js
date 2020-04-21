@@ -40,7 +40,7 @@ const NewPin = ({ history }) => {
         }
         setLoadingBoards(false);
 
-    }, [boards]);
+    }, [boards, updateLocalBoards]);
 
     const handleFileChange = e => file.current = e.target.files[0];
 

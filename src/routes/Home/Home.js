@@ -29,7 +29,7 @@ const Home = ({ isAuthenticated }) => {
     const fetchPins = () => API.get("scheduledPins", "/scheduledPins");
 
     const renderPinsList = pins => {
-        // console.log(pins);
+        console.log(pins);
     return [{}].concat(pins).map((pin, i) => 
             i !== 0 ? (
                 <LinkContainer key={pin.scheduledPinId} to={`/scheduledPins/${pin.scheduledPinId}`}>
@@ -38,36 +38,32 @@ const Home = ({ isAuthenticated }) => {
                     </ListGroupItem>
                 </LinkContainer>
             ) : (
-                    <LinkContainer key="new" to="/pins/new">
-                        <ListGroupItem>
-                            <h4>
-                                <b>{"\uFF0B"}</b> Create a new scheduled pin
-                    </h4>
-                        </ListGroupItem>
-                    </LinkContainer>
-                )
+                <LinkContainer key="new" to="/pins/new">
+                    <ListGroupItem>
+                        <h4>
+                            <b>{"\uFF0B"}</b> Create a new scheduled pin
+                </h4>
+                    </ListGroupItem>
+                </LinkContainer>
+            )
         );
     };
 
-    const renderLander = () => {
-        return (
-            <div className="lander">
-                <h1>Easy Pin Scheduler</h1>
-                <p>A simple Node app to schedule Pinterest pins </p>
-            </div>
-        );
-    }
+    const renderLander = () => (
+        <div className="lander">
+            <h1>Easy Pin Scheduler</h1>
+            <p>A simple Node app to schedule Pinterest pins </p>
+        </div>
+    );
 
-    const renderPins = () => {
-        return (
-            <div className="scheduledPins">
-                <PageHeader>Your Scheduled Pins</PageHeader>
-                <ListGroup>
-                    {!isLoading && renderPinsList(scheduledPins)}
-                </ListGroup>
-            </div>
-        )
-    }
+    const renderPins = () => (
+        <div className="scheduledPins">
+            <PageHeader>Your Scheduled Pins</PageHeader>
+            <ListGroup>
+                {!isLoading && renderPinsList(scheduledPins)}
+            </ListGroup>
+        </div>
+    );
 
     return (
         <div className="Home">

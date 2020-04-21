@@ -1,15 +1,15 @@
 import React from "react";
 import { Route, Switch } from "react-router-dom";
 import {AppliedRoute, AuthenticatedRoute, UnauthenticatedRoute } from "./components/RouteHelpers";
-import Home from "./containers/Home/Home";
-import Login from "./containers/Login/Login";
-import Signup from "./containers/Signup/Signup";
-import ResetPassword from "./containers/ResetPassword/ResetPassword";
-import NewPin from "./containers/NewPin/NewPin";
-import ScheduledPin from "./containers/ScheduledPin/ScheduledPin";
-import Settings from "./containers/Settings/Settings";
-import ChangePassword from "./containers/ChangePassword/ChangePassword";
-import NotFound from "./containers/NotFound/NotFound";
+import Home from "./routes/Home/Home";
+import Login from "./routes/Login/Login";
+import Signup from "./routes/Signup/Signup";
+import ResetPassword from "./routes/ResetPassword/ResetPassword";
+import NewPin from "./routes/NewPin/NewPin";
+import ScheduledPin from "./routes/ScheduledPin/ScheduledPin";
+import Settings from "./routes/Settings/Settings";
+import ChangePassword from "./routes/ChangePassword/ChangePassword";
+import NotFound from "./routes/NotFound/NotFound";
 
 const Routes = ({ appProps }) =>
     <Switch>
