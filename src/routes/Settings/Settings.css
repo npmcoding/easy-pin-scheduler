@@ -11,3 +11,15 @@
 .settings .LoaderButton:last-child {
     margin-top: 15px;
 }
+
+.settings .pinterest-account {
+    border: 1px solid black;
+    padding: 24px;
+    margin: 10px;
+}
+
+.settings .pinterest-connected {
+    color: green;
+    font-size: larger;
+    font-weight: 700;
+}
