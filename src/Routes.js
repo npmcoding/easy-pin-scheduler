@@ -7,7 +7,7 @@ import Signup from "./routes/Signup/Signup";
 import ResetPassword from "./routes/ResetPassword/ResetPassword";
 import NewPin from "./routes/NewPin/NewPin";
 import ScheduledPin from "./routes/ScheduledPin/ScheduledPin";
-import Settings from "./routes/Settings/Settings";
+import Profile from "./routes/Profile/Profile";
 import ChangePassword from "./routes/ChangePassword/ChangePassword";
 import NotFound from "./routes/NotFound/NotFound";
 
@@ -19,8 +19,8 @@ const Routes = ({ appProps }) =>
         <UnauthenticatedRoute path="/login/reset" exact component={ResetPassword} appProps={appProps} />
         <AuthenticatedRoute path="/pins/new" exact component={NewPin} appProps={appProps} />
         <AuthenticatedRoute path="/scheduledPins/:id" exact component={ScheduledPin} appProps={appProps} />
-        <AuthenticatedRoute path="/settings" exact component={Settings} appProps={appProps} />
-        <AuthenticatedRoute path="/settings/password" exact component={ChangePassword} appProps={appProps} />
+        <AuthenticatedRoute path="/profile" exact component={Profile} appProps={appProps} />
+        <AuthenticatedRoute path="/profile/password" exact component={ChangePassword} appProps={appProps} />
         { /* Finally, catch all unmatched routes */}
         <Route component={NotFound} />
     </Switch>;

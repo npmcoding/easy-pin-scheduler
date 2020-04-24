@@ -2,9 +2,9 @@ import React, { useState } from "react";
 import { LinkContainer } from "react-router-bootstrap";
 import { Button, ControlLabel, FormGroup } from "react-bootstrap";
 import LoaderButton from "../../components/LoaderButton/LoaderButton";
-import "./Settings.css";
+import "./Profile.css";
 
-const Settings = () => {
+const Profile = () => {
   const { login, logout, getSession } = window.PDK;
 
   const [isConnected, setIsConnected] = useState(!!getSession());
@@ -22,7 +22,7 @@ const Settings = () => {
   };
 
   return (
-    <div className="settings">
+    <div className="profile">
       <div className="pinterest-account">
         {isConnected ? (
           <>
@@ -46,7 +46,7 @@ const Settings = () => {
         )}
       </div>
       <div>
-        <LinkContainer to="/settings/password">
+        <LinkContainer to="/profile/password">
           <LoaderButton block bsSize="large" text="Change Password" />
         </LinkContainer>
       </div>
@@ -54,4 +54,4 @@ const Settings = () => {
   );
 };
 
-export default Settings;
+export default Profile;

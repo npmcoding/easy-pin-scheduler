@@ -44,7 +44,7 @@ const Home = ({ isAuthenticated }) => {
       ) : (
         <LinkContainer
           key="new"
-          to={PDKConnectedStatus ? "/pins/new" : "/settings"}
+          to={PDKConnectedStatus ? "/pins/new" : "/profile"}
         >
           <ListGroupItem>
             <h4>

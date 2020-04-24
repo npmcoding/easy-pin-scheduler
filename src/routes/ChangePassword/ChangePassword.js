@@ -23,7 +23,7 @@ const ChangePassword = ({ history }) => {
             const currentUser = await Auth.currentAuthenticatedUser();
             await Auth.changePassword(currentUser, oldPassword, password);
             
-            history.push("/settings");
+            history.push("/profile");
         } catch (err) {
             alert(err.message);
             setIsChanging(false);
