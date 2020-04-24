@@ -3,12 +3,14 @@ import { Nav, Navbar, NavItem } from "react-bootstrap";
 import { LinkContainer } from "react-router-bootstrap";
 import { Link } from "react-router-dom";
 import { Auth } from "aws-amplify";
+import { UserContext } from "../../components/UserContext";
 
 const NavigationBar = ({
   isAuthenticated,
   setUserHasAuthenticated,
   history,
 }) => {
+  const { email } = useContext(UserContext);
 
   const handleLogout = async () => {
     await Auth.signOut();
@@ -29,6 +31,7 @@ const NavigationBar = ({
           {isAuthenticated ? (
             <>
               <LinkContainer to="/Profile">
+                <NavItem>{email}</NavItem>
                 {/* 
           green dot for connected / red dot for not connected
               include pencil icon?
