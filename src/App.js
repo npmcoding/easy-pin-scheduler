@@ -6,6 +6,7 @@ import config from "./config";
 import Routes from "./Routes";
 import NavigationBar from "./components/NavigationBar/NavigationBar";
 import { UserContextComponent } from "./components/UserContext";
+import { BoardsContextComponent } from "./components/BoardsContext";
 
 const App = () => {
   const [isAuthenticating, setIsAuthenticating] = useState(true);
@@ -34,19 +35,21 @@ const App = () => {
   return (
     !isAuthenticating && (
       <UserContextComponent>
-        <div className="App container">
-          <NavigationBar
-            isAuthenticated={isAuthenticated}
-            setUserHasAuthenticated={setUserHasAuthenticated}
-          />
+        <BoardsContextComponent>
+          <div className="App container">
+            <NavigationBar
+              isAuthenticated={isAuthenticated}
+              setUserHasAuthenticated={setUserHasAuthenticated}
+            />
 
-          <Routes
-            appProps={{
-              isAuthenticated,
-              setUserHasAuthenticated,
-            }}
-          />
-        </div>
+            <Routes
+              appProps={{
+                isAuthenticated,
+                setUserHasAuthenticated,
+              }}
+            />
+          </div>
+        </BoardsContextComponent>
       </UserContextComponent>
     )
   );

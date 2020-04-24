@@ -9,18 +9,11 @@ export const UserContextComponent = ({ children }) => {
   // })
   const { getSession } = window.PDK;
 
-  const [boards, setBoards] = useState([]);
   const [email, setEmail] = useState(null);
 
   const [isConnected, setIsConnected] = useState(!!getSession());
 
-  const updateLocalBoards = (boardList) => {
-    setBoards(boardList);
-    localStorage.setItem("boards", JSON.stringify(boardList));
-  };
-
   useEffect(() => {
-    setBoards(JSON.parse(localStorage.getItem("boards")) || []);
     const getUserEmail = async () => {
       await Auth.currentSession().then(
         (sesh) => sesh && setEmail(sesh.idToken.payload.email)
@@ -32,8 +25,6 @@ export const UserContextComponent = ({ children }) => {
   return (
     <UserContext.Provider
       value={{
-        boards,
-        updateLocalBoards,
         email,
         setEmail,
         isConnected,
@@ -46,8 +37,6 @@ export const UserContextComponent = ({ children }) => {
 };
 
 export const UserContext = createContext({
-  boards: [],
-  updateLocalBoards: () => {},
   email: null,
   setEmail: () => {},
   isConnected: false,

@@ -14,9 +14,9 @@
 }
 
 .NavigationBar .connected::before {
-    background-color: green;
+    background-color: rgba(51, 204, 51, .5);
 }
 
 .NavigationBar .disconnected::before {
-    background-color: red;
+    background-color: rgba(255, 0, 0, .5);
 }

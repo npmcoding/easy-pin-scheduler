@@ -1,10 +1,10 @@
-import React, { useRef, useState, useEffect, useContext } from "react";
+import React, { useRef, useState, useContext } from "react";
 import { FormGroup, FormControl, ControlLabel, DropdownButton, MenuItem } from "react-bootstrap";
 import { API } from "aws-amplify";
 import { s3Upload } from "../../libs/awsLib";
 import LoaderButton from "../../components/LoaderButton/LoaderButton";
 import config from "../../config";
-import { UserContext } from '../../components/UserContext';
+import { BoardsContext } from '../../components/BoardsContext';
 import "./NewPin.css";
 
 
@@ -14,33 +14,32 @@ const NewPin = ({ history }) => {
     const [isLoading, setIsLoading] = useState(false);
 
     const [selectedBoard, setSelectedBoard] = useState(null);
-    const [loadingBoards, setLoadingBoards] = useState(true);
 
-    const { boards, updateLocalBoards } = useContext(UserContext);
+    const { boards, loadingBoards } = useContext(BoardsContext);
 
-    useEffect(() => {
-        const loadBoards = async () => {
-            try {
-                await window.PDK.me('boards', { fields: 'id,name' }, b => {
-                    if (b.error) {
-                        alert('Could not fetch boards. Try again later');
-                    }
-                    else {
-                        updateLocalBoards(b.data)
-                    }
-                });
-            } catch (e) {
-                alert('board fetching error', e);
-            }
-        }
+    // useEffect(() => {
+    //     const loadBoards = async () => {
+    //         try {
+    //             await window.PDK.me('boards', { fields: 'id,name' }, b => {
+    //                 if (b.error) {
+    //                     alert('Could not fetch boards. Try again later');
+    //                 }
+    //                 else {
+    //                     updateLocalBoards(b.data)
+    //                 }
+    //             });
+    //         } catch (e) {
+    //             alert('board fetching error', e);
+    //         }
+    //     }
 
-        if (!boards) {
-            loadBoards()
-            // updateLocalBoards([{id: "574701671138706368", name: "Test"}])
-        }
-        setLoadingBoards(false);
+    //     if (boards === null) {
+    //         loadBoards()
+    //         // updateLocalBoards([{id: "574701671138706368", name: "Test"}])
+    //     }
+    //     setLoadingBoards(false);
 
-    }, [boards, updateLocalBoards]);
+    // }, [boards, updateLocalBoards]);
 
     const handleFileChange = e => file.current = e.target.files[0];
 
@@ -87,7 +86,7 @@ const NewPin = ({ history }) => {
                         id="dropdown-basic-button"
                         title={selectedBoard ? selectedBoard.name : "Choose a board"}
                         disabled={loadingBoards}>
-                        {boards && boards.length && boards.map(b => (
+                        {boards && boards.length > 0 && boards.map(b => (
                             <MenuItem
                                 key={b.id}
                                 as="button"
