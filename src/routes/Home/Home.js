@@ -1,14 +1,15 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { PageHeader, ListGroup, ListGroupItem } from "react-bootstrap";
 import { LinkContainer } from "react-router-bootstrap";
 import { API } from "aws-amplify";
 import "./Home.css";
+import { UserContext } from "../../components/UserContext";
 
 const Home = ({ isAuthenticated }) => {
   const [scheduledPins, setScheduledPins] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
 
-  const PDKConnectedStatus = !!window.PDK.getSession();
+  const { isConnected } = useContext(UserContext);
 
   useEffect(() => {
     const onLoad = async () => {
@@ -42,13 +43,10 @@ const Home = ({ isAuthenticated }) => {
           </ListGroupItem>
         </LinkContainer>
       ) : (
-        <LinkContainer
-          key="new"
-          to={PDKConnectedStatus ? "/pins/new" : "/profile"}
-        >
+        <LinkContainer key="new" to={isConnected ? "/pins/new" : "/profile"}>
           <ListGroupItem>
             <h4>
-              {PDKConnectedStatus ? (
+              {isConnected ? (
                 <>
                   <b>{"\uFF0B"}</b> Create a new scheduled pin
                 </>

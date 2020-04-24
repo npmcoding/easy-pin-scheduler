@@ -1,13 +1,14 @@
-import React, { useState } from "react";
+import React, { useContext } from "react";
 import { LinkContainer } from "react-router-bootstrap";
 import { Button, ControlLabel, FormGroup } from "react-bootstrap";
 import LoaderButton from "../../components/LoaderButton/LoaderButton";
 import "./Profile.css";
+import { UserContext } from "../../components/UserContext";
 
 const Profile = () => {
-  const { login, logout, getSession } = window.PDK;
+  const { login, logout } = window.PDK;
 
-  const [isConnected, setIsConnected] = useState(!!getSession());
+  const { isConnected, setIsConnected } = useContext(UserContext);
 
   const onConnectClick = () => {
     const scope = "read_public, write_public";
