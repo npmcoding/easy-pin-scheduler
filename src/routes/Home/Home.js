@@ -3,13 +3,13 @@ import { PageHeader, ListGroup, ListGroupItem } from "react-bootstrap";
 import { LinkContainer } from "react-router-bootstrap";
 import { API } from "aws-amplify";
 import "./Home.css";
-import { UserContext } from "../../components/UserContext";
+import { PinterestContext } from "../../contexts/PinterestContext/PinterestContext";
 
 const Home = ({ isAuthenticated }) => {
   const [scheduledPins, setScheduledPins] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
 
-  const { isConnected } = useContext(UserContext);
+  const { isConnected } = useContext(PinterestContext);
 
   useEffect(() => {
     const onLoad = async () => {
@@ -31,7 +31,7 @@ const Home = ({ isAuthenticated }) => {
   const fetchPins = () => API.get("scheduledPins", "/scheduledPins");
 
   const renderPinsList = () => {
-    console.log({ scheduledPins });
+    // console.log({ scheduledPins });
     return [{}].concat(scheduledPins).map((pin, i) =>
       i !== 0 ? (
         <LinkContainer

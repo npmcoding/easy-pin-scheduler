@@ -2,19 +2,14 @@ import React, { useState, useEffect } from "react";
 import { withRouter } from "react-router-dom";
 import { Auth } from "aws-amplify";
 import "./App.css";
-import config from "./config";
 import Routes from "./Routes";
 import NavigationBar from "./components/NavigationBar/NavigationBar";
-import { UserContextComponent } from "./components/UserContext";
-import { BoardsContextComponent } from "./components/BoardsContext";
+import { UserContextComponent } from "./contexts/UserContext/UserContext";
+import { PinterestContextComponent } from "./contexts/PinterestContext/PinterestContext";
 
 const App = () => {
   const [isAuthenticating, setIsAuthenticating] = useState(true);
   const [isAuthenticated, setUserHasAuthenticated] = useState(false);
-
-  useEffect(() => {
-    window.PDK.init({ appId: config.PINTEREST_APP_ID, cookie: true });
-  }, []);
 
   const onLoad = async () => {
     try {
@@ -34,8 +29,8 @@ const App = () => {
 
   return (
     !isAuthenticating && (
-      <UserContextComponent>
-        <BoardsContextComponent>
+      <PinterestContextComponent>
+        <UserContextComponent>
           <div className="App container">
             <NavigationBar
               isAuthenticated={isAuthenticated}
@@ -49,8 +44,8 @@ const App = () => {
               }}
             />
           </div>
-        </BoardsContextComponent>
-      </UserContextComponent>
+        </UserContextComponent>
+      </PinterestContextComponent>
     )
   );
 };

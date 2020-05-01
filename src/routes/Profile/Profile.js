@@ -3,24 +3,23 @@ import { LinkContainer } from "react-router-bootstrap";
 import { Button, ControlLabel, FormGroup } from "react-bootstrap";
 import LoaderButton from "../../components/LoaderButton/LoaderButton";
 import "./Profile.css";
-import { UserContext } from "../../components/UserContext";
+import { PinterestContext } from "../../contexts/PinterestContext/PinterestContext";
 
 const Profile = () => {
-  const { login, logout } = window.PDK;
 
-  const { isConnected, setIsConnected } = useContext(UserContext);
+  const { isConnected, onConnectClick, onDisconnectClick } = useContext(PinterestContext);
 
-  const onConnectClick = () => {
-    const scope = "read_public, write_public";
-    login({ scope }, (accessToken) => {
-      setIsConnected(!!accessToken);
-    });
-  };
+  // const onConnectClick = () => {
+  //   const scope = "read_public, write_public";
+  //   login({ scope }, (accessToken) => {
+  //     setIsConnected(!!accessToken);
+  //   });
+  // };
 
-  const onDisconnectClick = () => {
-    logout();
-    setIsConnected(false);
-  };
+  // const onDisconnectClick = () => {
+  //   logout();
+  //   setIsConnected(false);
+  // };
 
   return (
     <div className="profile">

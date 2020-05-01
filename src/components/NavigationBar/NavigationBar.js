@@ -3,7 +3,8 @@ import { Nav, Navbar, NavItem } from "react-bootstrap";
 import { LinkContainer } from "react-router-bootstrap";
 import { Link } from "react-router-dom";
 import { Auth } from "aws-amplify";
-import { UserContext } from "../../components/UserContext";
+import { UserContext } from "../../contexts/UserContext/UserContext";
+import { PinterestContext } from "../../contexts/PinterestContext/PinterestContext";
 import "./NavigationBar.css";
 
 const NavigationBar = ({
@@ -11,15 +12,16 @@ const NavigationBar = ({
   setUserHasAuthenticated,
   history,
 }) => {
-  const { email, isConnected } = useContext(UserContext);
+  const { email } = useContext(UserContext);
+  const connectionStatus = useContext(PinterestContext).isConnected
+    ? "connected"
+    : "disconnected";
 
   const handleLogout = async () => {
     await Auth.signOut();
     setUserHasAuthenticated(false);
     history.push("/login");
   };
-
-  const connectionStatus = isConnected ? "connected" : "disconnected";
 
   return (
     <Navbar fluid collapseOnSelect>
