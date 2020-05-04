@@ -42,12 +42,17 @@ const NewPin = ({ history }) => {
       return;
     }
 
+    if (!selectedBoard) {
+      alert('Please choose a board');
+      return;
+    }
+
     setIsLoading(true);
 
     try {
       const attachment = file.current ? await s3Upload(file.current) : null;
 
-      await createPin({ content, attachment });
+      await createPin({ content, attachment, board: selectedBoard });
       history.push("/");
     } catch (e) {
       console.log(e);
