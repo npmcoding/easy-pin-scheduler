@@ -4,44 +4,44 @@ import { shouldUpdateBoards, loadBoards } from "./boardsUtil";
 
 export const PinterestContextComponent = ({ children }) => {
   const [PDKInitialized, setPDKInitialized] = useState(false);
-  const [isConnected, setIsConnected] = useState(false);
-
+  const [pinterestAccessToken, setPinterestAccessToken] = useState(null);
   const [boards, setBoards] = useState(null);
   const [loadingBoards, setLoadingBoards] = useState(false);
 
   useEffect(() => {
     window.PDK.init({ appId: config.PINTEREST_APP_ID, cookie: true });
-    console.log(window.PDK.getSession())
-    setIsConnected(!!window.PDK.getSession());
     setPDKInitialized(true);
 
-    setBoards(JSON.parse(localStorage.getItem("boards")) || null);
-  }, []);
+    const { accessToken } = window.PDK.getSession();
+      setPinterestAccessToken(accessToken || null);
 
+      setBoards(JSON.parse(localStorage.getItem("boards")) || null);
+  }, []);
 
   const fetchBoards = useCallback(() => {
     if (PDKInitialized && shouldUpdateBoards()) {
       loadBoards(setBoards, setLoadingBoards);
     }
-  },[PDKInitialized]);
+  }, [PDKInitialized]);
 
   const onConnectClick = () => {
     const scope = "read_public, write_public";
     window.PDK.login({ scope }, (accessToken) => {
-      setIsConnected(!!accessToken);
+      setPinterestAccessToken(accessToken);
     });
   };
 
   const onDisconnectClick = () => {
     window.PDK.logout();
-    setIsConnected(false);
+    setPinterestAccessToken(null);
   };
 
   return (
     <PinterestContext.Provider
       value={{
         PDKInitialized,
-        isConnected,
+        pinterestAccessToken,
+        isConnected: !!pinterestAccessToken,
         boards,
         loadingBoards,
         fetchBoards,
@@ -56,7 +56,7 @@ export const PinterestContextComponent = ({ children }) => {
 
 export const PinterestContext = createContext({
   PDKInitialized: false,
-  isConnected: false,
+  pinterestAccessToken: null,
   boards: null,
   loadingBoards: false,
   fetchBoards: () => {},
