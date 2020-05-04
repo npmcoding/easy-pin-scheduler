@@ -1,8 +1,17 @@
 .scheduledPin form {
-    padding-bottom: 15px;
+  padding-bottom: 15px;
 }
 
 .scheduledPin form textarea {
-    height: 300px;
-    font-size: 24px;
+  height: 300px;
+  font-size: 24px;
+}
+
+.scheduledPin .action-buttons {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.scheduledPin .cancel-button {
+  margin: 0 20px;
 }

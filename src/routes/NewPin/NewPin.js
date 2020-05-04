@@ -5,6 +5,7 @@ import {
   ControlLabel,
   DropdownButton,
   MenuItem,
+  Button,
 } from "react-bootstrap";
 import { API } from "aws-amplify";
 import { s3Upload } from "../../libs/awsLib";
@@ -23,7 +24,7 @@ const NewPin = ({ history }) => {
 
   useEffect(() => {
     fetchBoards();
-  },[fetchBoards]);
+  }, [fetchBoards]);
 
   const handleFileChange = (e) => (file.current = e.target.files[0]);
 
@@ -97,15 +98,24 @@ const NewPin = ({ history }) => {
           <ControlLabel>Attachment</ControlLabel>
           <FormControl onChange={handleFileChange} type="file" />
         </FormGroup>
-        <LoaderButton
-          block
-          type="submit"
-          bsSize="large"
-          bsStyle="primary"
-          isLoading={isLoading}
-        >
-          Create
-        </LoaderButton>
+        <FormGroup className="action-buttons">
+          <Button
+            className="cancel-button"
+            bsSize="large"
+            onClick={() => history.goBack()}
+          >
+            Cancel
+          </Button>
+          <LoaderButton
+            // block
+            type="submit"
+            bsSize="large"
+            bsStyle="primary"
+            isLoading={isLoading}
+          >
+            Create
+          </LoaderButton>
+        </FormGroup>
       </form>
     </div>
   );

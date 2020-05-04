@@ -1,12 +1,21 @@
 .newpin form {
-    padding-bottom: 15px;
+  padding-bottom: 15px;
 }
 
 .newpin form textarea {
-    height: 150px;
-    font-size: 24px;
+  height: 150px;
+  font-size: 24px;
 }
 
-.newpin label[for='board'] {
-    display: block;
+.newpin label[for="board"] {
+  display: block;
+}
+
+.newpin .action-buttons {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.newpin .cancel-button {
+  margin: 0 20px;
 }
