@@ -1,26 +1,41 @@
 .Home .lander {
-    padding: 80px 0;
-    text-align: center;
+  padding: 80px 0;
+  text-align: center;
 }
 
 .Home .lander h1 {
-    font-family: "Open Sans", sans-serif;
-    font-weight: 600;
+  font-family: "Open Sans", sans-serif;
+  font-weight: 600;
 }
 
 .Home .lander p {
-    color: #999;
+  color: #999;
 }
 
 .Home .scheduledPins h4 {
-    font-family: "Open Sans", sans-serif;
-    font-weight: 600;
-    overflow: hidden;
-    line-height: 1.5;
-    white-space: nowrap;
-    text-overflow: ellipsis;
+  font-family: "Open Sans", sans-serif;
+  font-weight: 600;
+  overflow: hidden;
+  line-height: 1.5;
+  white-space: nowrap;
+  text-overflow: ellipsis;
 }
 
 .Home .scheduledPins p {
-    color: #666;
+  color: #666;
+}
+
+.Home .scheduled-pin-list-item {
+  display: flex;
+}
+
+.Home .scheduled-pin-edit-link {
+  width: 100%;
+  border-top-right-radius: 0px;
+}
+
+.Home .schedule-pin-post-now-button {
+  border-radius: 0px;
+  border-left: none;
+  margin-bottom: -1px;
 }

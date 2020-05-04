@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext } from "react";
-import { PageHeader, ListGroup, ListGroupItem } from "react-bootstrap";
+import { PageHeader, ListGroup, ListGroupItem, Button } from "react-bootstrap";
 import { LinkContainer } from "react-router-bootstrap";
 import { API } from "aws-amplify";
 import "./Home.css";
@@ -9,7 +9,8 @@ const Home = ({ isAuthenticated }) => {
   const [scheduledPins, setScheduledPins] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
 
-  const { isConnected } = useContext(PinterestContext);
+  const { isConnected, pinterestAccessToken } = useContext(PinterestContext);
+  const fetchPins = () => API.get("scheduledPins", "/scheduledPins");
 
   useEffect(() => {
     const onLoad = async () => {
@@ -28,20 +29,49 @@ const Home = ({ isAuthenticated }) => {
     onLoad();
   }, [isAuthenticated]);
 
-  const fetchPins = () => API.get("scheduledPins", "/scheduledPins");
+  const PostPin = async (pin) => {
+    // const data = {
+    //   board: pin.board.id,
+    //   note: pin.content,
+    //   // image_url: "http://test.url",
+    // };
+    // fetch(
+    //   `https://api.pinterest.com/v1/pins/?access_token=${pinterestAccessToken}&fields=id%2Cnote%2Curl`,
+    //   {
+    //     method: "POST",
+    //     headers: {
+    //       "Content-Type": "application/json",
+    //     },
+    //     body: JSON.stringify(data),
+    //   }
+    // )
+    //   .then((response) => console.log(response.json()))
+    //   .catch((error) => {
+    //     console.error("Error:", error);
+    //   });
+    console.log(pin);
+  };
 
   const renderPinsList = () => {
     // console.log({ scheduledPins });
     return [{}].concat(scheduledPins).map((pin, i) =>
       i !== 0 ? (
-        <LinkContainer
-          key={pin.scheduledPinId}
-          to={`/scheduledPins/${pin.scheduledPinId}`}
-        >
-          <ListGroupItem header={pin.content.trim().split("\n")[0]}>
-            {`Created: ${new Date(pin.createdAt).toLocaleString()}`}
-          </ListGroupItem>
-        </LinkContainer>
+        <div key={pin.scheduledPinId} className="scheduled-pin-list-item">
+          <LinkContainer
+            className="scheduled-pin-edit-link"
+            to={`/scheduledPins/${pin.scheduledPinId}`}
+          >
+            <ListGroupItem header={pin.content.trim().split("\n")[0]}>
+              {`Created: ${new Date(pin.createdAt).toLocaleString()}`}
+            </ListGroupItem>
+          </LinkContainer>
+          <Button
+            className="schedule-pin-post-now-button"
+            onClick={() => PostPin(pin)}
+          >
+            Post now
+          </Button>
+        </div>
       ) : (
         <LinkContainer key="new" to={isConnected ? "/pins/new" : "/profile"}>
           <ListGroupItem>
