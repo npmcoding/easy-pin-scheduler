@@ -1,5 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+import { RecoilRoot } from 'recoil';
 import { BrowserRouter as Router } from "react-router-dom";
 import Amplify from "aws-amplify";
 import config from "./config";
@@ -34,7 +35,9 @@ Amplify.configure({
 
 ReactDOM.render(
     <Router>
-        <App />
+        <RecoilRoot>
+            <App />
+        </RecoilRoot>
     </Router>,
     document.getElementById('root')
 );

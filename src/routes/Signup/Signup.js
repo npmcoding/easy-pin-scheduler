@@ -10,7 +10,7 @@ import LoaderButton from "../../components/LoaderButton/LoaderButton";
 import { useFormFields } from "../../libs/hooksLib";
 import "./Signup.css";
 
-const Signup = ({ setUserHasAuthenticated, history }) => {
+const Signup = ({ setIsAuthenticated, history }) => {
     const [{ email, password, confirmPassword, confirmationCode }, handleFieldChange] = useFormFields({
         email: "",
         password: "",
@@ -63,7 +63,7 @@ const Signup = ({ setUserHasAuthenticated, history }) => {
             await Auth.confirmSignUp(email, confirmationCode);
             await Auth.signIn(email, password);
 
-            setUserHasAuthenticated(true);
+            setIsAuthenticated(true);
             history.push("/");
         } catch (e) {
             alert(e.message);

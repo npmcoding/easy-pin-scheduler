@@ -1,51 +1,41 @@
 import React, { useState, useEffect } from "react";
+import { useRecoilState } from "recoil";
 import { withRouter } from "react-router-dom";
 import { Auth } from "aws-amplify";
-import { RecoilRoot } from 'recoil';
 import "./App.css";
 import Routes from "./Routes";
 import NavigationBar from "./components/NavigationBar/NavigationBar";
-import { UserContextComponent } from "./contexts/UserContext/UserContext";
+import { authenticatedState } from "./atoms/userAtoms";
 
 const App = () => {
   const [isAuthenticating, setIsAuthenticating] = useState(true);
-  const [isAuthenticated, setUserHasAuthenticated] = useState(false);
+  const setIsAuthenticated = useRecoilState(authenticatedState)[1];
 
-  const onLoad = async () => {
-    try {
-      await Auth.currentSession();
-      setUserHasAuthenticated(true);
-    } catch (e) {
-      if (e !== "No current user") {
-        alert(e);
-      }
-    }
-    setIsAuthenticating(false);
-  };
+
+  console.log(setIsAuthenticated);
 
   useEffect(() => {
+    const onLoad = async () => {
+      try {
+        await Auth.currentSession();
+        setIsAuthenticated(true);
+      } catch (e) {
+        if (e !== "No current user") {
+          alert(e);
+        }
+      }
+      setIsAuthenticating(false);
+    };
+
     onLoad();
-  }, []);
+  }, [setIsAuthenticated]);
 
   return (
     !isAuthenticating && (
-      <RecoilRoot>
-        <UserContextComponent>
-          <div className="App container">
-            <NavigationBar
-              isAuthenticated={isAuthenticated}
-              setUserHasAuthenticated={setUserHasAuthenticated}
-            />
-
-            <Routes
-              appProps={{
-                isAuthenticated,
-                setUserHasAuthenticated,
-              }}
-            />
-          </div>
-        </UserContextComponent>
-      </RecoilRoot>
+      <div className="App container">
+        <NavigationBar />
+        <Routes />
+      </div>
     )
   );
 };

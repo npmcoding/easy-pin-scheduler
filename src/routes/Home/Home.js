@@ -5,11 +5,13 @@ import { LinkContainer } from "react-router-bootstrap";
 import { API } from "aws-amplify";
 import "./Home.css";
 import { connectedState } from "../../atoms/pinterestAtoms";
+import { authenticatedState } from "../../atoms/userAtoms";
 
-const Home = ({ isAuthenticated }) => {
+const Home = () => {
   const [scheduledPins, setScheduledPins] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [isConnected] = useRecoilState(connectedState);
+  const [isAuthenticated] = useRecoilState(authenticatedState);
 
   const fetchPins = () => API.get("scheduledPins", "/scheduledPins");
 

@@ -1,17 +1,21 @@
 import React from "react";
 import { Route, Redirect } from "react-router-dom";
+import { useRecoilState } from "recoil";
+import { authenticatedState } from "../atoms/userAtoms";
 
-export const AppliedRoute = ({ component: C, appProps, ...rest }) => {
-    return <Route {...rest} render={props => <C {...props} {...appProps} />} />
+export const AppliedRoute = ({ component: C, ...rest }) => {
+    return <Route {...rest} render={props => <C {...props} />} />
 }
 
 export const AuthenticatedRoute = ({ component: C, appProps, location, ...rest }) => {
+    const [isAuthenticated] = useRecoilState(authenticatedState);
+
     return (
         <Route
             {...rest}
             render={props =>
-                appProps.isAuthenticated
-                    ? <C {...props} {...appProps} />
+                isAuthenticated
+                    ? <C {...props} />
                     : <Redirect
                         to={`/login?redirect=${location.pathname}${location.search}`}
                     />}
@@ -19,14 +23,15 @@ export const AuthenticatedRoute = ({ component: C, appProps, location, ...rest }
     );
 }
 
-export const UnauthenticatedRoute = ({ component: C, appProps, ...rest }) => {
+export const UnauthenticatedRoute = ({ component: C, ...rest }) => {
+    const [isAuthenticated] = useRecoilState(authenticatedState);
     const redirect = querystring("redirect");
     return (
         <Route
             {...rest}
             render={props =>
-                !appProps.isAuthenticated
-                    ? <C {...props} {...appProps} />
+                !isAuthenticated
+                    ? <C {...props} />
                     : <Redirect
                         to={redirect === "" || redirect === null ? "/" : redirect}
                     />}
