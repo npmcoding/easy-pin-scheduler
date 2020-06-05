@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { withRouter } from "react-router-dom";
 import { Auth } from "aws-amplify";
+import { RecoilRoot } from 'recoil';
 import "./App.css";
 import Routes from "./Routes";
 import NavigationBar from "./components/NavigationBar/NavigationBar";
@@ -28,6 +29,7 @@ const App = () => {
 
   return (
     !isAuthenticating && (
+      <RecoilRoot>
         <UserContextComponent>
           <div className="App container">
             <NavigationBar
@@ -43,6 +45,7 @@ const App = () => {
             />
           </div>
         </UserContextComponent>
+      </RecoilRoot>
     )
   );
 };

@@ -1,13 +1,15 @@
 import React, { useState, useEffect } from "react";
+import {useRecoilState} from "recoil";
 import { PageHeader, ListGroup, ListGroupItem, Button } from "react-bootstrap";
 import { LinkContainer } from "react-router-bootstrap";
 import { API } from "aws-amplify";
 import "./Home.css";
-import { isConnected } from "../../libs/pinterestLib";
+import { connectedState } from "../../atoms/pinterestAtoms";
 
 const Home = ({ isAuthenticated }) => {
   const [scheduledPins, setScheduledPins] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [isConnected] = useRecoilState(connectedState);
 
   const fetchPins = () => API.get("scheduledPins", "/scheduledPins");
 
@@ -72,10 +74,10 @@ const Home = ({ isAuthenticated }) => {
           </Button>
         </div>
       ) : (
-        <LinkContainer key="new" to={isConnected() ? "/pins/new" : "/profile"}>
+        <LinkContainer key="new" to={isConnected ? "/pins/new" : "/profile"}>
           <ListGroupItem>
             <h4>
-              {isConnected() ? (
+              {isConnected ? (
                 <>
                   <b>{"\uFF0B"}</b> Create a new scheduled pin
                 </>

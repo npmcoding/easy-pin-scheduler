@@ -5,6 +5,6 @@ window.PDK.init({ appId: config.PINTEREST_APP_ID, cookie: true });
 
 export const pinterestLogin = callback => window.PDK.login({ scope: 'read_public, write_public' }, callback);
 export const pinterestLogout = () => window.PDK.logout();
-export const isConnected = () => !!window.PDK.getSession();
+export const isLoggedIn = () => !!window.PDK.getSession();
 export const createPin = (data, callback) => window.PDK.request('/pins/', 'POST', data, callback);
 export const myBoards = callback => window.PDK.me('boards', { fields: 'id,name' }, callback);

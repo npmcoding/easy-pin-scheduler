@@ -1,10 +1,11 @@
 import React, { useContext } from "react";
+import {useRecoilState} from "recoil";
 import { Nav, Navbar, NavItem } from "react-bootstrap";
 import { LinkContainer } from "react-router-bootstrap";
 import { Link } from "react-router-dom";
 import { Auth } from "aws-amplify";
 import { UserContext } from "../../contexts/UserContext/UserContext";
-import { isConnected } from "../../libs/pinterestLib";
+import { connectedState } from "../../atoms/pinterestAtoms";
 import "./NavigationBar.css";
 
 const NavigationBar = ({
@@ -13,8 +14,10 @@ const NavigationBar = ({
   history,
 }) => {
   const { email } = useContext(UserContext);
-  const connectionStatus = isConnected() ? "connected" : "disconnected";
-  console.log(isConnected());
+
+  const [isConnected] = useRecoilState(connectedState);
+  const connectionStatus = isConnected ? "connected" : "disconnected";
+  console.log(isConnected);
   console.log(connectionStatus);
 
   const handleLogout = async () => {
