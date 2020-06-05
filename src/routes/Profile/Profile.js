@@ -9,7 +9,7 @@ const Profile = () => {
   return (
     <div className="profile">
       <div className="pinterest-account">
-        {isConnected ? (
+        {isConnected() ? (
           <>
             <p className="pinterest-connected">
               Your Pinterest account is connected!

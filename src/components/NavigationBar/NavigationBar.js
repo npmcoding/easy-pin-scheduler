@@ -4,7 +4,7 @@ import { LinkContainer } from "react-router-bootstrap";
 import { Link } from "react-router-dom";
 import { Auth } from "aws-amplify";
 import { UserContext } from "../../contexts/UserContext/UserContext";
-import { PinterestContext } from "../../contexts/PinterestContext/PinterestContext";
+import { isConnected } from "../../libs/pinterestLib";
 import "./NavigationBar.css";
 
 const NavigationBar = ({
@@ -13,9 +13,9 @@ const NavigationBar = ({
   history,
 }) => {
   const { email } = useContext(UserContext);
-  const connectionStatus = useContext(PinterestContext).isConnected
-    ? "connected"
-    : "disconnected";
+  const connectionStatus = isConnected() ? "connected" : "disconnected";
+  console.log(isConnected());
+  console.log(connectionStatus);
 
   const handleLogout = async () => {
     await Auth.signOut();

@@ -72,10 +72,10 @@ const Home = ({ isAuthenticated }) => {
           </Button>
         </div>
       ) : (
-        <LinkContainer key="new" to={isConnected ? "/pins/new" : "/profile"}>
+        <LinkContainer key="new" to={isConnected() ? "/pins/new" : "/profile"}>
           <ListGroupItem>
             <h4>
-              {isConnected ? (
+              {isConnected() ? (
                 <>
                   <b>{"\uFF0B"}</b> Create a new scheduled pin
                 </>
