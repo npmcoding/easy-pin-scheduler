@@ -1,4 +1,4 @@
-import React, { useRef, useState, useContext, useEffect } from "react";
+import React, { useRef, useState } from "react";
 import {
   FormGroup,
   FormControl,
@@ -11,7 +11,7 @@ import { API } from "aws-amplify";
 import { s3Upload } from "../../libs/awsLib";
 import LoaderButton from "../../components/LoaderButton/LoaderButton";
 import config from "../../config";
-import { PinterestContext } from "../../contexts/PinterestContext/PinterestContext";
+import { myBoards } from "../../libs/pinterestLib";
 import "./NewPin.css";
 
 const NewPin = ({ history }) => {
@@ -19,12 +19,24 @@ const NewPin = ({ history }) => {
   const [content, setContent] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [selectedBoard, setSelectedBoard] = useState(null);
+  const [loadingBoards, setLoadingBoards] = useState(true);
 
-  const { boards, loadingBoards, fetchBoards } = useContext(PinterestContext);
+  // const { boards, loadingBoards, fetchBoards } = useContext(PinterestContext);
 
-  useEffect(() => {
-    fetchBoards();
-  }, [fetchBoards]);
+  const boards = myBoards((b) => {
+    if (b.error) {
+      console.log(b.error);
+      // localStorage.setItem("boardsUpdatedAt", undefined);
+      alert("Could not fetch boards. Try again later");
+    } else {
+      setLoadingBoards(false);
+      console.log(b.data)
+      return b.data;
+      // localStorage.setItem("boards", JSON.stringify(b.data));
+      // localStorage.setItem("boardsUpdatedAt", Date.now());
+      // setBoards([{id: "574701671138706368", name: "Test"}])
+    }
+  });
 
   const handleFileChange = (e) => (file.current = e.target.files[0]);
 
@@ -36,7 +48,7 @@ const NewPin = ({ history }) => {
     if (file.current && file.current.size > config.MAX_ATTACHMENT_SIZE) {
       alert(
         `Please pick a file smaller than ${
-          config.MAX_ATTACHMENT_SIZE / 1000000
+        config.MAX_ATTACHMENT_SIZE / 1000000
         } MB.`
       );
       return;

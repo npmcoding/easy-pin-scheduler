@@ -5,7 +5,6 @@ import "./App.css";
 import Routes from "./Routes";
 import NavigationBar from "./components/NavigationBar/NavigationBar";
 import { UserContextComponent } from "./contexts/UserContext/UserContext";
-import { PinterestContextComponent } from "./contexts/PinterestContext/PinterestContext";
 
 const App = () => {
   const [isAuthenticating, setIsAuthenticating] = useState(true);
@@ -29,7 +28,6 @@ const App = () => {
 
   return (
     !isAuthenticating && (
-      <PinterestContextComponent>
         <UserContextComponent>
           <div className="App container">
             <NavigationBar
@@ -45,7 +43,6 @@ const App = () => {
             />
           </div>
         </UserContextComponent>
-      </PinterestContextComponent>
     )
   );
 };

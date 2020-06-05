@@ -1,15 +1,14 @@
-import React, { useState, useEffect, useContext } from "react";
+import React, { useState, useEffect } from "react";
 import { PageHeader, ListGroup, ListGroupItem, Button } from "react-bootstrap";
 import { LinkContainer } from "react-router-bootstrap";
 import { API } from "aws-amplify";
 import "./Home.css";
-import { PinterestContext } from "../../contexts/PinterestContext/PinterestContext";
+import { isConnected } from "../../libs/pinterestLib";
 
 const Home = ({ isAuthenticated }) => {
   const [scheduledPins, setScheduledPins] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
 
-  const { isConnected, pinterestAccessToken } = useContext(PinterestContext);
   const fetchPins = () => API.get("scheduledPins", "/scheduledPins");
 
   useEffect(() => {
