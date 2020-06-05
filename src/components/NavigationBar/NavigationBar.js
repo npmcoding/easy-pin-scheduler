@@ -1,5 +1,6 @@
 import React, { useEffect } from "react";
 import { useRecoilState } from "recoil";
+import { useHistory } from "react-router-dom";
 import { Nav, Navbar, NavItem } from "react-bootstrap";
 import { LinkContainer } from "react-router-bootstrap";
 import { Link } from "react-router-dom";
@@ -8,8 +9,8 @@ import { connectedState } from "../../atoms/pinterestAtoms";
 import { emailState, authenticatedState } from "../../atoms/userAtoms";
 import "./NavigationBar.css";
 
-  history,
 const NavigationBar = () => {
+  const history = useHistory();
   
   const [email, setEmail] = useRecoilState(emailState);
   const [isAuthenticated, setIsAuthenticated] = useRecoilState(authenticatedState);
