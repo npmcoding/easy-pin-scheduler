@@ -14,6 +14,7 @@ import LoaderButton from "../../components/LoaderButton/LoaderButton";
 import config from "../../config";
 import { boardsState } from "../../atoms/pinterestAtoms";
 import { fetchBoards } from "../../libs/pinterestLib";
+// import { loadBoards } from "../../libs/boardsUtil";
 import "./NewPin.css";
 
 const NewPin = ({ history }) => {
@@ -21,7 +22,7 @@ const NewPin = ({ history }) => {
   const [content, setContent] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [selectedBoard, setSelectedBoard] = useState(null);
-  const [loadingBoards, setLoadingBoards] = useState(false);
+  const [loadingBoards, setLoadingBoards] = useState(true);
 
   const [boards, setBoards] = useRecoilState(boardsState);
 
@@ -29,25 +30,14 @@ const NewPin = ({ history }) => {
   // const { boards, loadingBoards, fetchBoards } = useContext(PinterestContext);
   useEffect(() => {
     setBoards([{ id: "574701671138706368", name: "Test" }]);
-  }, []);
+    setLoadingBoards(false);
+  }, [setBoards]);
 
   // useEffect(() => {
   //   if (boardsState === null) {
-  //     fetchBoards(b => {
-  //       if (b.error) {
-  //         console.log(b.error);
-  //     // localStorage.setItem("boardsUpdatedAt", undefined);
-  //         alert("Could not fetch boards. Try again later");
-  //       } else {
-  //         setLoadingBoards(false);
-  //         console.log(b.data)
-  //         setBoards(b.data);
-  //     // localStorage.setItem("boards", JSON.stringify(b.data));
-  //     // localStorage.setItem("boardsUpdatedAt", Date.now());
-  //       }
-  //     });
+  //     loadBoards(setBoards, setLoadingBoards);
   //   }
-  // });
+  // },[boardsState, loadBoards, setBoards, setLoadingBoards]);
 
   const handleFileChange = (e) => (file.current = e.target.files[0]);
 

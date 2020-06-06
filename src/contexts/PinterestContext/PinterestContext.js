@@ -1,6 +1,5 @@
 import React, { useState, createContext, useEffect, useCallback } from "react";
 import config from "../../config";
-import { shouldUpdateBoards, loadBoards } from "./boardsUtil";
 
 export const PinterestContextComponent = ({ children }) => {
   const [PDKInitialized, setPDKInitialized] = useState(false);
@@ -17,12 +16,6 @@ export const PinterestContextComponent = ({ children }) => {
 
       setBoards(JSON.parse(localStorage.getItem("boards")) || null);
   }, []);
-
-  const fetchBoards = useCallback(() => {
-    if (PDKInitialized && shouldUpdateBoards()) {
-      loadBoards(setBoards, setLoadingBoards);
-    }
-  }, [PDKInitialized]);
 
   const onConnectClick = () => {
     const scope = "read_public, write_public";

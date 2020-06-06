@@ -1,3 +1,5 @@
+import { fetchBoards } from "./pinterestLib";
+
 const TWENTYFOURHOURSINMILLISECONDS = 24 * 60 * 60 * 1000;
 
 export const shouldUpdateBoards = () => {
@@ -11,7 +13,6 @@ export const shouldUpdateBoards = () => {
 };
 
 export const loadBoards = async (setBoards, setLoadingBoards) => {
-  // if (PDKInitialized) {
   setLoadingBoards(true);
   try {
     await window.PDK.me("boards", { fields: "id,name" }, (b) => {
@@ -21,6 +22,7 @@ export const loadBoards = async (setBoards, setLoadingBoards) => {
         alert("Could not fetch boards. Try again later");
       } else {
         setBoards(b.data);
+        setLoadingBoards(false);
         localStorage.setItem("boards", JSON.stringify(b.data));
         localStorage.setItem("boardsUpdatedAt", Date.now());
         // setBoards([{id: "574701671138706368", name: "Test"}])
