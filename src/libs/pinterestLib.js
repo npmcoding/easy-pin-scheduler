@@ -7,4 +7,4 @@ export const pinterestLogin = callback => window.PDK.login({ scope: 'read_public
 export const pinterestLogout = () => window.PDK.logout();
 export const isLoggedIn = () => !!window.PDK.getSession();
 export const createPin = (data, callback) => window.PDK.request('/pins/', 'POST', data, callback);
-export const myBoards = callback => window.PDK.me('boards', { fields: 'id,name' }, callback);
+export const fetchBoards = callback => window.PDK.me('boards', { fields: 'id,name' }, callback);

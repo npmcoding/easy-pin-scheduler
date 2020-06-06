@@ -1,4 +1,5 @@
-import React, { useRef, useState } from "react";
+import React, { useRef, useState, useEffect } from "react";
+import { useRecoilState } from "recoil";
 import {
   FormGroup,
   FormControl,
@@ -11,7 +12,8 @@ import { API } from "aws-amplify";
 import { s3Upload } from "../../libs/awsLib";
 import LoaderButton from "../../components/LoaderButton/LoaderButton";
 import config from "../../config";
-import { myBoards } from "../../libs/pinterestLib";
+import { boardsState } from "../../atoms/pinterestAtoms";
+import { fetchBoards } from "../../libs/pinterestLib";
 import "./NewPin.css";
 
 const NewPin = ({ history }) => {
@@ -21,22 +23,29 @@ const NewPin = ({ history }) => {
   const [selectedBoard, setSelectedBoard] = useState(null);
   const [loadingBoards, setLoadingBoards] = useState(false);
 
+  const [boards, setBoards] = useRecoilState(boardsState);
+
+
   // const { boards, loadingBoards, fetchBoards } = useContext(PinterestContext);
+  useEffect(() => {
+    setBoards([{ id: "574701671138706368", name: "Test" }]);
+  }, []);
 
-  const boards = [{ id: "574701671138706368", name: "Test" }];
-
-  // const boards = myBoards((b) => {
-  //   if (b.error) {
-  //     console.log(b.error);
+  // useEffect(() => {
+  //   if (boardsState === null) {
+  //     fetchBoards(b => {
+  //       if (b.error) {
+  //         console.log(b.error);
   //     // localStorage.setItem("boardsUpdatedAt", undefined);
-  //     alert("Could not fetch boards. Try again later");
-  //   } else {
-  //     setLoadingBoards(false);
-  //     console.log(b.data)
-  //     return b.data;
+  //         alert("Could not fetch boards. Try again later");
+  //       } else {
+  //         setLoadingBoards(false);
+  //         console.log(b.data)
+  //         setBoards(b.data);
   //     // localStorage.setItem("boards", JSON.stringify(b.data));
   //     // localStorage.setItem("boardsUpdatedAt", Date.now());
-  //     // setBoards([{id: "574701671138706368", name: "Test"}])
+  //       }
+  //     });
   //   }
   // });
 
@@ -50,7 +59,7 @@ const NewPin = ({ history }) => {
     if (file.current && file.current.size > config.MAX_ATTACHMENT_SIZE) {
       alert(
         `Please pick a file smaller than ${
-          config.MAX_ATTACHMENT_SIZE / 1000000
+        config.MAX_ATTACHMENT_SIZE / 1000000
         } MB.`
       );
       return;
@@ -136,6 +145,7 @@ const NewPin = ({ history }) => {
           </LoaderButton>
         </FormGroup>
       </form>
+      <button onClick={() => fetchBoards((b) => console.log(b))} type='button'>Get Boards</button>
     </div>
   );
 };

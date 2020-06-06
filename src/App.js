@@ -11,9 +11,6 @@ const App = () => {
   const [isAuthenticating, setIsAuthenticating] = useState(true);
   const setIsAuthenticated = useRecoilState(authenticatedState)[1];
 
-
-  console.log(setIsAuthenticated);
-
   useEffect(() => {
     const onLoad = async () => {
       try {
