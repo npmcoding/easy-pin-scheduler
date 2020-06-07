@@ -1,11 +1,11 @@
 import { useState, useEffect } from "react";
 import { fetchBoards } from "./pinterestLib";
+import { TWENTYFOURHOURS } from "./constants";
 
-const TWENTYFOURHOURSINMILLISECONDS = 24 * 60 * 60 * 1000;
 const shouldUpdateBoards = () => {
   const boardsUpdatedAtDate = localStorage.getItem("boardsUpdatedAt");
   const localBoards = localStorage.getItem("boards");
-  const yesterday = Date.now() - TWENTYFOURHOURSINMILLISECONDS;
+  const yesterday = Date.now() - TWENTYFOURHOURS;
 
   return (
     !localBoards || !boardsUpdatedAtDate || boardsUpdatedAtDate < yesterday

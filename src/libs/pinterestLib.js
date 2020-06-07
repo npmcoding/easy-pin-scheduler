@@ -1,6 +1,5 @@
 import config from '../config';
-const ONEMINUTE = 60 * 60 * 1000;
-const ONEHOUR = 60 * ONEMINUTE;
+import { ONEHOUR, ONEMINUTE } from "./constants";
 
 // Initialize once with app id
 window.PDK.init({ appId: config.PINTEREST_APP_ID, cookie: true });
