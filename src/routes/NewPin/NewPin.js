@@ -1,5 +1,4 @@
-import React, { useRef, useState, useEffect } from "react";
-import { useRecoilState } from "recoil";
+import React, { useRef, useState } from "react";
 import {
   FormGroup,
   FormControl,
@@ -12,9 +11,7 @@ import { API } from "aws-amplify";
 import { s3Upload } from "../../libs/awsLib";
 import LoaderButton from "../../components/LoaderButton/LoaderButton";
 import config from "../../config";
-import { boardsState } from "../../atoms/pinterestAtoms";
-import { fetchBoards } from "../../libs/pinterestLib";
-// import { loadBoards } from "../../libs/boardsUtil";
+import { useBoards } from "../../libs/boardsUtil";
 import "./NewPin.css";
 
 const NewPin = ({ history }) => {
@@ -22,22 +19,9 @@ const NewPin = ({ history }) => {
   const [content, setContent] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [selectedBoard, setSelectedBoard] = useState(null);
-  const [loadingBoards, setLoadingBoards] = useState(true);
+  const [boards, loadingBoards] = useBoards();
 
-  const [boards, setBoards] = useRecoilState(boardsState);
-
-
-  // const { boards, loadingBoards, fetchBoards } = useContext(PinterestContext);
-  useEffect(() => {
-    setBoards([{ id: "574701671138706368", name: "Test" }]);
-    setLoadingBoards(false);
-  }, [setBoards]);
-
-  // useEffect(() => {
-  //   if (boardsState === null) {
-  //     loadBoards(setBoards, setLoadingBoards);
-  //   }
-  // },[boardsState, loadBoards, setBoards, setLoadingBoards]);
+  console.log(boards);
 
   const handleFileChange = (e) => (file.current = e.target.files[0]);
 
@@ -90,18 +74,16 @@ const NewPin = ({ history }) => {
             title={selectedBoard ? selectedBoard.name : "Choose a board"}
             disabled={loadingBoards}
           >
-            {boards &&
-              boards.length > 0 &&
-              boards.map((b) => (
-                <MenuItem
-                  key={b.id}
-                  as="button"
-                  eventKey={b.id}
-                  onClick={() => setSelectedBoard(b)}
-                >
-                  {b.name}
-                </MenuItem>
-              ))}
+            {boards.map((b) => (
+              <MenuItem
+                key={b.id}
+                as="button"
+                eventKey={b.id}
+                onClick={() => setSelectedBoard(b)}
+              >
+                {b.name}
+              </MenuItem>
+            ))}
           </DropdownButton>
         </FormGroup>
         <FormGroup controlId="content">
@@ -135,7 +117,6 @@ const NewPin = ({ history }) => {
           </LoaderButton>
         </FormGroup>
       </form>
-      <button onClick={() => fetchBoards((b) => console.log(b))} type='button'>Get Boards</button>
     </div>
   );
 };
