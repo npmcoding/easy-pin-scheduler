@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from "react";
-import {useRecoilState} from "recoil";
+import { useRecoilState } from "recoil";
 import { PageHeader, ListGroup, ListGroupItem, Button } from "react-bootstrap";
 import { LinkContainer } from "react-router-bootstrap";
 import { API } from "aws-amplify";
-import "./Home.css";
+import { createPin } from "../../libs/pinterestLib";
 import { connectedState } from "../../atoms/pinterestAtoms";
 import { authenticatedState } from "../../atoms/userAtoms";
+import "./Home.css";
 
 const Home = () => {
   const [scheduledPins, setScheduledPins] = useState([]);
@@ -33,26 +34,23 @@ const Home = () => {
   }, [isAuthenticated]);
 
   const PostPin = async (pin) => {
-    // const data = {
-    //   board: pin.board.id,
-    //   note: pin.content,
-    //   // image_url: "http://test.url",
-    // };
-    // fetch(
-    //   `https://api.pinterest.com/v1/pins/?access_token=${pinterestAccessToken}&fields=id%2Cnote%2Curl`,
-    //   {
-    //     method: "POST",
-    //     headers: {
-    //       "Content-Type": "application/json",
-    //     },
-    //     body: JSON.stringify(data),
-    //   }
-    // )
-    //   .then((response) => console.log(response.json()))
-    //   .catch((error) => {
-    //     console.error("Error:", error);
-    //   });
+    const data = {
+      image_url: "https://i.picsum.photos/id/1022/6000/3376.jpg",
+      link: "google.com",
+      board: pin.board.id,
+      note: pin.content,
+    };
     console.log(pin);
+    console.log(data);
+    createPin(data, (response) => {
+      console.log(response);
+      /*
+      update scheduled Pin with "posted" status, posted date 
+      and response.data.url value so that the "Post" button 
+      can be turned into "View" and the user is notified of 
+      successful post. May need error handling here.
+      */
+    });
   };
 
   const renderPinsList = () => {

@@ -16,8 +16,8 @@ const oneHourLimit = (message = '') => {
     } else {
         const minutesLeft = Math.round((ONEHOUR - timeSinceLastCall) / ONEMINUTE);
         alert(`
-        One hour API call limit has been reached.\n 
         ${message} \n
+        One hour API call limit has been reached.\n 
         Please wait another ${minutesLeft} minutes before trying again`);
     }
     return false;
