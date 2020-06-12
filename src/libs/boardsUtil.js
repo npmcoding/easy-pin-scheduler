@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { fetchBoards } from "./pinterestLib";
+// import { fetchBoards } from "./pinterestLib";
 import { TWENTYFOURHOURS } from "./constants";
 
 const shouldUpdateBoards = () => {
@@ -18,26 +18,30 @@ export const useBoards = () => {
 
   useEffect(() => {
     setLoadingBoards(true);
-    console.log(shouldUpdateBoards())
     if (shouldUpdateBoards()) {
-      try {
-        fetchBoards(b => {
-          if (b.error) {
-            console.log(b.error);
-            localStorage.setItem("boardsUpdatedAt", undefined);
-            alert("Could not fetch boards. Try again later");
-          } else if (b.data) {
-            setBoards(b.data);
-            localStorage.setItem("boards", JSON.stringify(b.data));
+      /***
+       *  TODO: uncomment this
+       * I already know this works, I just don't want to use up
+       * the precious few Pinterest API calls on board fetching
+       ***/
+      // try {
+      //   fetchBoards(b => {
+      //     if (b.error) {
+      //       console.log(b.error);
+      //       localStorage.setItem("boardsUpdatedAt", undefined);
+      //       alert("Could not fetch boards. Try again later");
+      //     } else if (b.data) {
+      //       setBoards(b.data);
+      //       localStorage.setItem("boards", JSON.stringify(b.data));
             localStorage.setItem("boardsUpdatedAt", Date.now());
-            // setBoards([{id: "574701671138706368", name: "Test"}])
-          }
+            setBoards([{id: "574701671138706368", name: "Test"}])
+      //     }
           setLoadingBoards(false);
-        });
-      } catch (e) {
-        localStorage.setItem("boardsUpdatedAt", undefined);
-        alert("board fetching error", e);
-      }
+      //   });
+      // } catch (e) {
+      //   localStorage.setItem("boardsUpdatedAt", undefined);
+      //   alert("board fetching error", e);
+      // }
     }
     setLoadingBoards(false);
   }, [setLoadingBoards, setBoards]);

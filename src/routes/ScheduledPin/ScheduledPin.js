@@ -9,7 +9,9 @@ import "./ScheduledPin.css";
 const ScheduledPin = ({ match, history }) => {
   const file = useRef(null);
   const [pin, setPin] = useState(null);
-  const [content, setContent] = useState("");
+  const [note, setNote] = useState("");
+  const [link, setLink] = useState("");
+  const [imageUrl, setImageUrl] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
 
@@ -20,13 +22,14 @@ const ScheduledPin = ({ match, history }) => {
     const onLoad = async () => {
       try {
         const pin = await loadPin();
-        const { content, attachment } = pin;
+        const { note, link, imagePath } = pin;
 
-        if (attachment) {
-          pin.attachmentURL = await Storage.vault.get(attachment);
+        if (imagePath) {
+          setImageUrl(await Storage.vault.get(imagePath));
         }
 
-        setContent(content);
+        setNote(note);
+        setLink(link);
         setPin(pin);
       } catch (e) {
         alert(e);
@@ -47,14 +50,14 @@ const ScheduledPin = ({ match, history }) => {
   };
 
   const handleSubmit = async (e) => {
-    let attachment;
+    let imagePath;
 
     e.preventDefault();
 
-    if (file.current && file.current.size > config.MAX_ATTACHMENT_SIZE) {
+    if (file.current && file.current.size > config.MAX_imagePath_SIZE) {
       alert(
         `Please pick a file smaller than ${
-          config.MAX_ATTACHMENT_SIZE / 1000000
+          config.MAX_imagePath_SIZE / 1000000
         } MB.`
       );
       return;
@@ -64,17 +67,18 @@ const ScheduledPin = ({ match, history }) => {
 
     try {
       if (file.current) {
-        if (pin.attachment) {
-          //const key = `${pin.userId}/${pin.attachment}`;
-          await s3Remove(pin.attachment);
+        if (pin.imagePath) {
+          //const key = `${pin.userId}/${pin.imagePath}`;
+          await s3Remove(pin.imagePath);
         }
 
-        attachment = await s3Upload(file.current);
+        imagePath = await s3Upload(file.current);
       }
 
       await savePin({
-        content,
-        attachment: attachment || pin.attachment,
+        note,
+        link,
+        imagePath: imagePath || pin.imagePath,
       });
       history.push("/");
     } catch (e) {
@@ -110,35 +114,41 @@ const ScheduledPin = ({ match, history }) => {
     <div className="scheduledPin">
       {pin && (
         <form onSubmit={handleSubmit}>
-          <FormGroup controlId="content">
-            <ControlLabel>Caption</ControlLabel>
+          <FormGroup controlId="board">
+            <ControlLabel>Board</ControlLabel>
+            <FormControl readOnly defaultValue={pin.board.name} />
+          </FormGroup>
+          <FormGroup controlId="note">
+            <ControlLabel>Description</ControlLabel>
             <FormControl
-              value={content}
-              componentClass="textarea"
-              onChange={(e) => setContent(e.target.value)}
+              value={note}
+              onChange={(e) => setNote(e.target.value)}
             />
           </FormGroup>
-          {pin.attachment && (
+          <FormGroup controlId="link">
+            <ControlLabel>Link URL</ControlLabel>
+            <FormControl
+              value={link}
+              onChange={(e) => setLink(e.target.value)}
+            />
+          </FormGroup>
+          {pin.imagePath && (
             <FormGroup>
-              <ControlLabel>Attachment</ControlLabel>
+              <ControlLabel>Image</ControlLabel>
               <FormControl.Static>
-                <a
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  href={pin.attachmentURL}
-                >
-                  {formatFilename(pin.attachment)}
+                <a target="_blank" rel="noopener noreferrer" href={imageUrl}>
+                  {formatFilename(pin.imagePath)}
                 </a>
               </FormControl.Static>
             </FormGroup>
           )}
           <FormGroup controlId="file">
-            {!pin.attachment && <ControlLabel>Attachment</ControlLabel>}
+            {!pin.imagePath && <ControlLabel>Image</ControlLabel>}
             <FormControl onChange={handleFileChange} type="file" />
           </FormGroup>
           <FormGroup className="action-buttons">
             <LoaderButton
-            //   block
+              //   block
               bsSize="large"
               bsStyle="danger"
               onClick={handleDelete}

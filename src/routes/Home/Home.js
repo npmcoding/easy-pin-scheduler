@@ -35,10 +35,11 @@ const Home = () => {
 
   const PostPin = async (pin) => {
     const data = {
-      image_url: "https://i.picsum.photos/id/1022/6000/3376.jpg",
-      link: "google.com",
+      image_url:
+        pin.imagePath || "https://i.picsum.photos/id/1022/6000/3376.jpg",
+      link: pin.link || "google.com",
       board: pin.board.id,
-      note: pin.content,
+      note: pin.note,
     };
     console.log(pin);
     console.log(data);
@@ -54,26 +55,9 @@ const Home = () => {
   };
 
   const renderPinsList = () => {
-    // console.log({ scheduledPins });
-    return [{}].concat(scheduledPins).map((pin, i) =>
-      i !== 0 ? (
-        <div key={pin.scheduledPinId} className="scheduled-pin-list-item">
-          <LinkContainer
-            className="scheduled-pin-edit-link"
-            to={`/scheduledPins/${pin.scheduledPinId}`}
-          >
-            <ListGroupItem header={pin.content.trim().split("\n")[0]}>
-              {`Created: ${new Date(pin.createdAt).toLocaleString()}`}
-            </ListGroupItem>
-          </LinkContainer>
-          <Button
-            className="schedule-pin-post-now-button"
-            onClick={() => PostPin(pin)}
-          >
-            Post now
-          </Button>
-        </div>
-      ) : (
+    console.log({ scheduledPins });
+    return (
+      <>
         <LinkContainer key="new" to={isConnected ? "/pins/new" : "/profile"}>
           <ListGroupItem>
             <h4>
@@ -87,7 +71,25 @@ const Home = () => {
             </h4>
           </ListGroupItem>
         </LinkContainer>
-      )
+        {scheduledPins.map((pin) => (
+          <div key={pin.scheduledPinId} className="scheduled-pin-list-item">
+            <LinkContainer
+              className="scheduled-pin-edit-link"
+              to={`/scheduledPins/${pin.scheduledPinId}`}
+            >
+              <ListGroupItem header={pin.note.trim().split("\n")[0]}>
+                {`Created: ${new Date(pin.createdAt).toLocaleString()}`}
+              </ListGroupItem>
+            </LinkContainer>
+            <Button
+              className="schedule-pin-post-now-button"
+              onClick={() => PostPin(pin)}
+            >
+              Post now
+            </Button>
+          </div>
+        ))}
+      </>
     );
   };
 
