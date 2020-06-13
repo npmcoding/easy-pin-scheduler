@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { useState } from "react";
 import {
   FormGroup,
   FormControl,
@@ -8,21 +8,19 @@ import {
   Button,
 } from "react-bootstrap";
 import { API } from "aws-amplify";
-import { s3Upload } from "../../libs/awsLib";
+import { formatFilename, handleImageUpload } from "../../libs/awsLib";
 import LoaderButton from "../../components/LoaderButton/LoaderButton";
-import config from "../../config";
 import { useBoards } from "../../libs/boardsUtil";
 import "./NewPin.css";
 
 const NewPin = ({ history }) => {
-  const file = useRef(null);
   const [note, setNote] = useState("");
   const [link, setLink] = useState("");
+  const [imagePath, setImagePath] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [selectedBoard, setSelectedBoard] = useState(null);
+  const [imageURL, setImageURL] = useState("");
   const [boards, loadingBoards] = useBoards();
-
-  const handleFileChange = (e) => (file.current = e.target.files[0]);
 
   const createPin = (scheduledPin) => {
     return API.post("scheduledPins", "/scheduledPins", {
@@ -30,19 +28,19 @@ const NewPin = ({ history }) => {
     });
   };
 
+  const handleFileChange = async (e) => {
+    e.preventDefault();
+    const currentFile = e.target.files[0];
+    const { newImagePath, newImageURL } = await handleImageUpload(
+      currentFile,
+      imagePath
+    );
+    setImagePath(newImagePath);
+    setImageURL(newImageURL || imageURL);
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
-
-    console.log(file.current);
-
-    if (file.current && file.current.size > config.MAX_ATTACHMENT_SIZE) {
-      alert(
-        `Please pick a file smaller than ${
-          config.MAX_ATTACHMENT_SIZE / 1000000
-        } MB.`
-      );
-      return;
-    }
 
     if (!selectedBoard) {
       alert("Please choose a board");
@@ -52,8 +50,6 @@ const NewPin = ({ history }) => {
     setIsLoading(true);
 
     try {
-      const imagePath = file.current ? await s3Upload(file.current) : null;
-
       await createPin({ note, link, imagePath, board: selectedBoard });
       history.push("/");
     } catch (e) {
@@ -87,20 +83,25 @@ const NewPin = ({ history }) => {
         </FormGroup>
         <FormGroup controlId="note">
           <ControlLabel>Description</ControlLabel>
-          <FormControl
-            value={note}
-            onChange={(e) => setNote(e.target.value)}
-          />
-        </FormGroup> 
+          <FormControl value={note} onChange={(e) => setNote(e.target.value)} />
+        </FormGroup>
         <FormGroup controlId="link">
           <ControlLabel>Link URL</ControlLabel>
-          <FormControl
-            value={link}
-            onChange={(e) => setLink(e.target.value)}
-          />
+          <FormControl value={link} onChange={(e) => setLink(e.target.value)} />
         </FormGroup>
-        <FormGroup controlId="file">
+        <FormGroup>
           <ControlLabel>Image</ControlLabel>
+          {imageURL && (
+            <FormControl.Static>
+              <a target="_blank" rel="noopener noreferrer" href={imageURL}>
+                <img
+                  className="thumb"
+                  src={imageURL}
+                  alt={formatFilename(imagePath)}
+                />
+              </a>
+            </FormControl.Static>
+          )}
           <FormControl onChange={handleFileChange} type="file" />
         </FormGroup>
         <FormGroup className="action-buttons">

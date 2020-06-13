@@ -1,17 +1,16 @@
-import React, { useRef, useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { API, Storage } from "aws-amplify";
 import { FormGroup, FormControl, ControlLabel, Button } from "react-bootstrap";
 import LoaderButton from "../../components/LoaderButton/LoaderButton";
-import config from "../../config";
-import { s3Upload, s3Remove } from "../../libs/awsLib";
+import { formatFilename, handleImageUpload } from "../../libs/awsLib";
 import "./ScheduledPin.css";
 
 const ScheduledPin = ({ match, history }) => {
-  const file = useRef(null);
   const [pin, setPin] = useState(null);
   const [note, setNote] = useState("");
   const [link, setLink] = useState("");
-  const [imageUrl, setImageUrl] = useState("");
+  const [imagePath, setImagePath] = useState("");
+  const [imageURL, setImageURL] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
 
@@ -21,16 +20,15 @@ const ScheduledPin = ({ match, history }) => {
 
     const onLoad = async () => {
       try {
-        const pin = await loadPin();
-        const { note, link, imagePath } = pin;
-
-        if (imagePath) {
-          setImageUrl(await Storage.vault.get(imagePath));
+        const initialPin = await loadPin();
+        if (initialPin.imagePath) {
+          setImagePath(initialPin.imagePath);
+          setImageURL(await Storage.vault.get(initialPin.imagePath));
         }
 
-        setNote(note);
-        setLink(link);
-        setPin(pin);
+        setNote(initialPin.note || "");
+        setLink(initialPin.link || "");
+        setPin(initialPin);
       } catch (e) {
         alert(e);
       }
@@ -39,46 +37,38 @@ const ScheduledPin = ({ match, history }) => {
     onLoad();
   }, [match.params.id]);
 
-  const formatFilename = (str) => str.replace(/^\w+-/, "");
-
-  const handleFileChange = (e) => (file.current = e.target.files[0]);
+  const handleFileChange = async (e) => {
+    e.preventDefault();
+    const currentFile = e.target.files[0];
+    const { newImagePath, newImageURL } = await handleImageUpload(
+      currentFile,
+      imagePath
+    );
+    setImagePath(newImagePath);
+    setImageURL(newImageURL || imageURL);
+  };
 
   const savePin = (pin) => {
     return API.put("scheduledPins", `/scheduledPins/${match.params.id}`, {
-      body: pin,
+      body: {
+        ...pin,
+        note,
+        link,
+        imagePath,
+      },
     });
   };
 
   const handleSubmit = async (e) => {
-    let imagePath;
-
     e.preventDefault();
-
-    if (file.current && file.current.size > config.MAX_imagePath_SIZE) {
-      alert(
-        `Please pick a file smaller than ${
-          config.MAX_imagePath_SIZE / 1000000
-        } MB.`
-      );
-      return;
-    }
-
     setIsLoading(true);
 
     try {
-      if (file.current) {
-        if (pin.imagePath) {
-          //const key = `${pin.userId}/${pin.imagePath}`;
-          await s3Remove(pin.imagePath);
-        }
-
-        imagePath = await s3Upload(file.current);
-      }
-
       await savePin({
+        ...pin,
         note,
         link,
-        imagePath: imagePath || pin.imagePath,
+        imagePath,
       });
       history.push("/");
     } catch (e) {
@@ -132,18 +122,19 @@ const ScheduledPin = ({ match, history }) => {
               onChange={(e) => setLink(e.target.value)}
             />
           </FormGroup>
-          {pin.imagePath && (
-            <FormGroup>
-              <ControlLabel>Image</ControlLabel>
+          <FormGroup>
+            <ControlLabel>Image</ControlLabel>
+            {imageURL && (
               <FormControl.Static>
-                <a target="_blank" rel="noopener noreferrer" href={imageUrl}>
-                  {formatFilename(pin.imagePath)}
+                <a target="_blank" rel="noopener noreferrer" href={imageURL}>
+                  <img
+                    className="thumb"
+                    src={imageURL}
+                    alt={formatFilename(imagePath)}
+                  />
                 </a>
               </FormControl.Static>
-            </FormGroup>
-          )}
-          <FormGroup controlId="file">
-            {!pin.imagePath && <ControlLabel>Image</ControlLabel>}
+            )}
             <FormControl onChange={handleFileChange} type="file" />
           </FormGroup>
           <FormGroup className="action-buttons">
