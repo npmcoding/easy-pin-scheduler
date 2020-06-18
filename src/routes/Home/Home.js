@@ -2,7 +2,8 @@ import React, { useState, useEffect } from "react";
 import { useRecoilState } from "recoil";
 import { PageHeader, ListGroup, ListGroupItem, Button } from "react-bootstrap";
 import { LinkContainer } from "react-router-bootstrap";
-import { API } from "aws-amplify";
+import { API, Storage } from "aws-amplify";
+import { formatFilename } from "../../libs/awsLib";
 import { createPin } from "../../libs/pinterestLib";
 import { connectedState } from "../../atoms/pinterestAtoms";
 import { authenticatedState } from "../../atoms/userAtoms";
@@ -17,32 +18,40 @@ const Home = () => {
   const fetchPins = () => API.get("scheduledPins", "/scheduledPins");
 
   useEffect(() => {
-    const onLoad = async () => {
-      if (!isAuthenticated) return;
+    if (!isAuthenticated) return;
 
-      try {
-        const fetchedPins = await fetchPins();
-        setScheduledPins(fetchedPins);
-      } catch (e) {
-        alert(e);
-      }
+    fetchPins()
+      .then((pins) => {
+        setScheduledPins(pins);
+        fetchThumbnails(pins);
+      })
+      .catch((e) => alert(e));
 
-      setIsLoading(false);
-    };
-
-    onLoad();
+    setIsLoading(false);
   }, [isAuthenticated]);
 
-  const PostPin = async (pin) => {
+  const fetchThumbnails = (pins) => {
+    Promise.all(
+      pins.map((pin) => {
+        return Storage.vault.get(pin.imagePath).then((image_url) => {
+          return {
+            ...pin,
+            image_url,
+          };
+        });
+      })
+    ).then((fetchedPins) => setScheduledPins(fetchedPins));
+  };
+
+  const PostPin = ({ link, board, note, image_url }) => {
     const data = {
-      image_url:
-        pin.imagePath || "https://i.picsum.photos/id/1022/6000/3376.jpg",
-      link: pin.link || "google.com",
-      board: pin.board.id,
-      note: pin.note,
+      image_url,
+      link: link || "",
+      board: board.id,
+      note: note || "",
     };
-    console.log(pin);
     console.log(data);
+
     createPin(data, (response) => {
       console.log(response);
       /*
@@ -55,7 +64,7 @@ const Home = () => {
   };
 
   const renderPinsList = () => {
-    console.log({ scheduledPins });
+    // console.log({ scheduledPins });
     return (
       <>
         <LinkContainer key="new" to={isConnected ? "/pins/new" : "/profile"}>
@@ -71,24 +80,33 @@ const Home = () => {
             </h4>
           </ListGroupItem>
         </LinkContainer>
-        {scheduledPins.map((pin) => (
-          <div key={pin.scheduledPinId} className="scheduled-pin-list-item">
-            <LinkContainer
-              className="scheduled-pin-edit-link"
-              to={`/scheduledPins/${pin.scheduledPinId}`}
-            >
-              <ListGroupItem header={pin.note.trim().split("\n")[0]}>
-                {`Created: ${new Date(pin.createdAt).toLocaleString()}`}
-              </ListGroupItem>
-            </LinkContainer>
-            <Button
-              className="schedule-pin-post-now-button"
-              onClick={() => PostPin(pin)}
-            >
-              Post now
-            </Button>
-          </div>
-        ))}
+        {scheduledPins.map((pin) => {
+          return (
+            <div key={pin.scheduledPinId} className="scheduled-pin-list-item">
+              <LinkContainer
+                className="scheduled-pin-edit-link"
+                to={`/scheduledPins/${pin.scheduledPinId}`}
+              >
+                <ListGroupItem header={pin.note.trim().split("\n")[0]}>
+                  {`Created: ${new Date(pin.createdAt).toLocaleString()}`}
+                  {pin.image_url && (
+                    <img
+                      className="thumb"
+                      src={pin.image_url}
+                      alt={formatFilename(pin.imagePath)}
+                    />
+                  )}
+                </ListGroupItem>
+              </LinkContainer>
+              <Button
+                className="schedule-pin-post-now-button"
+                onClick={() => PostPin(pin)}
+              >
+                Post now
+              </Button>
+            </div>
+          );
+        })}
       </>
     );
   };
