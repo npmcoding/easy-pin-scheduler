@@ -26,6 +26,7 @@ const oneHourLimit = (message = '') => {
 export const pinterestLogin = callback => window.PDK.login({ scope: 'read_public, write_public' }, callback);
 export const pinterestLogout = () => window.PDK.logout();
 export const isLoggedIn = () => !!window.PDK.getSession();
+export const getAccessToken = () => window.PDK.getSession().accessToken;
 export const createPin = (data, callback) => {
     oneHourLimit('Pin creation unsuccessful') &&
         window.PDK.request('/pins/', 'POST', data, callback);
