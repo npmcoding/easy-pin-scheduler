@@ -3,8 +3,8 @@ import { useRecoilState } from "recoil";
 import { PageHeader, ListGroup, ListGroupItem, Button } from "react-bootstrap";
 import { LinkContainer } from "react-router-bootstrap";
 import { API, Storage } from "aws-amplify";
-import { formatFilename } from "../../libs/awsLib";
-import { createPin } from "../../libs/pinterestLib";
+import { formatFilename, createShortURL } from "../../libs/awsLib";
+// import { createPin } from "../../libs/pinterestLib";
 import { connectedState } from "../../atoms/pinterestAtoms";
 import { authenticatedState } from "../../atoms/userAtoms";
 import "./Home.css";
@@ -33,6 +33,9 @@ const Home = () => {
   const fetchThumbnails = (pins) => {
     Promise.all(
       pins.map((pin) => {
+        if(!pin.imagePath) {
+          return pin;
+        }        
         return Storage.vault.get(pin.imagePath).then((image_url) => {
           return {
             ...pin,
@@ -43,24 +46,25 @@ const Home = () => {
     ).then((fetchedPins) => setScheduledPins(fetchedPins));
   };
 
-  const PostPin = ({ link, board, note, image_url }) => {
+  const PostPin = ({ link, board, note, imagePath }) => {
     const data = {
-      image_url,
+      imagePath,
       link: link || "",
       board: board.id,
       note: note || "",
     };
     console.log(data);
 
-    createPin(data, (response) => {
-      console.log(response);
+    createShortURL(imagePath);
+    // createPin(data, (response) => {
+    //   console.log(response);
       /*
       update scheduled Pin with "posted" status, posted date 
       and response.data.url value so that the "Post" button 
       can be turned into "View" and the user is notified of 
       successful post. May need error handling here.
       */
-    });
+    // });
   };
 
   const renderPinsList = () => {
