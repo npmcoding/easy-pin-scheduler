@@ -7,10 +7,11 @@ import {
   MenuItem,
   Button,
 } from "react-bootstrap";
-import { API } from "aws-amplify";
+import { createPin } from "../../libs/epsLib";
 import { formatFilename, handleImageUpload } from "../../libs/awsLib";
 import LoaderButton from "../../components/LoaderButton/LoaderButton";
 import { useBoards } from "../../libs/boardsUtil";
+import { getAccessToken } from "../../libs/pinterestLib";
 import "./NewPin.css";
 
 const NewPin = ({ history }) => {
@@ -21,12 +22,6 @@ const NewPin = ({ history }) => {
   const [selectedBoard, setSelectedBoard] = useState(null);
   const [imageURL, setImageURL] = useState("");
   const [boards, loadingBoards] = useBoards();
-
-  const createPin = (scheduledPin) => {
-    return API.post("scheduledPins", "/scheduledPins", {
-      body: scheduledPin,
-    });
-  };
 
   const handleFileChange = async (e) => {
     e.preventDefault();
@@ -39,7 +34,7 @@ const NewPin = ({ history }) => {
     setImageURL(newImageURL || imageURL);
   };
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = (e) => {
     e.preventDefault();
 
     if (!selectedBoard) {
@@ -49,14 +44,25 @@ const NewPin = ({ history }) => {
 
     setIsLoading(true);
 
-    try {
-      await createPin({ note, link, imagePath, board: selectedBoard });
-      history.push("/");
-    } catch (e) {
-      console.log(e);
-      alert(e);
-      setIsLoading(false);
-    }
+    const pin = {
+      accessToken: getAccessToken(),
+      note,
+      link,
+      imagePath,
+      board: selectedBoard,
+    };
+    createPin(pin)
+      .then((success) => {
+        if (success) {
+          history.push("/");
+        } else {
+          alert("Pin creation unsuccessful");
+        }
+      })
+      .catch((e) => {
+        alert(e);
+        setIsLoading(false);
+      });
   };
 
   return (

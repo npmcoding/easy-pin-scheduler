@@ -2,7 +2,12 @@ import React, { useState, useEffect } from "react";
 import { API, Storage } from "aws-amplify";
 import { FormGroup, FormControl, ControlLabel, Button } from "react-bootstrap";
 import LoaderButton from "../../components/LoaderButton/LoaderButton";
-import { formatFilename, handleImageUpload } from "../../libs/awsLib";
+import { savePin, deletePin } from "../../libs/epsLib";
+import {
+  formatFilename,
+  handleImageUpload,
+  getAWSKey,
+} from "../../libs/awsLib";
 import "./ScheduledPin.css";
 
 const ScheduledPin = ({ match, history }) => {
@@ -48,39 +53,33 @@ const ScheduledPin = ({ match, history }) => {
     setImageURL(newImageURL || imageURL);
   };
 
-  const savePin = (pin) => {
-    return API.put("scheduledPins", `/scheduledPins/${match.params.id}`, {
-      body: {
-        ...pin,
-        note,
-        link,
-        imagePath,
-      },
-    });
-  };
-
-  const handleSubmit = async (e) => {
+  const handleSubmit = (e) => {
     e.preventDefault();
     setIsLoading(true);
 
-    try {
-      await savePin({
-        ...pin,
-        note,
-        link,
-        imagePath,
+    const updatedPin = {
+      ...pin,
+      note,
+      link,
+      imagePath,
+      awsKey: getAWSKey(imagePath),
+    };
+
+    savePin(updatedPin, match.params.id)
+      .then((success) => {
+        if (success) {
+          history.push("/");
+        } else {
+          alert("Update unsuccessful");
+        }
+      })
+      .catch((e) => {
+        alert(e);
+        setIsLoading(false);
       });
-      history.push("/");
-    } catch (e) {
-      alert(e);
-      setIsLoading(false);
-    }
   };
 
-  const deletePin = () =>
-    API.del("scheduledPins", `/scheduledPins/${match.params.id}`);
-
-  const handleDelete = async (e) => {
+  const handleDelete = (e) => {
     e.preventDefault();
 
     const confirmed = window.confirm(
@@ -91,13 +90,18 @@ const ScheduledPin = ({ match, history }) => {
 
     setIsDeleting(true);
 
-    try {
-      await deletePin();
-      history.push("/");
-    } catch (e) {
-      alert(e);
-      setIsDeleting(false);
-    }
+    deletePin(imagePath, match.params.id)
+      .then((success) => {
+        if (success) {
+          history.push("/");
+        } else {
+          alert("Delete unsuccessful");
+        }
+      })
+      .catch((e) => {
+        alert(e);
+        setIsDeleting(false);
+      });
   };
 
   return (
