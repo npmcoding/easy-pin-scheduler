@@ -7,31 +7,39 @@ import { Link } from "react-router-dom";
 import { Auth } from "aws-amplify";
 import { connectedState } from "../../atoms/pinterestAtoms";
 import { emailState, authenticatedState } from "../../atoms/userAtoms";
+import { pinterestLogout } from "../../libs/pinterestLib";
 import "./NavigationBar.css";
 
 const NavigationBar = () => {
   const history = useHistory();
-  
-  const [email, setEmail] = useRecoilState(emailState);
-  const [isAuthenticated, setIsAuthenticated] = useRecoilState(authenticatedState);
 
-  const [isConnected] = useRecoilState(connectedState);
+  const [email, setEmail] = useRecoilState(emailState);
+  const [isAuthenticated, setIsAuthenticated] = useRecoilState(
+    authenticatedState
+  );
+
+  const [isConnected, setIsConnected] = useRecoilState(connectedState);
 
   const connectionStatus = isConnected ? "connected" : "disconnected";
 
   useEffect(() => {
-    const getUserEmail = async () => {
-      await Auth.currentSession().then(
-        (sesh) => sesh && setEmail(sesh.idToken.payload.email)
-      );
-    };
-    getUserEmail();
-  }, [setEmail]);
+    if (isAuthenticated) {
+      Auth.currentSession()
+        .then((sesh) => sesh && setEmail(sesh.idToken.payload.email))
+        .catch((e) => console.warn(e));
+    }
+  }, [setEmail, isAuthenticated]);
 
-  const handleLogout = async () => {
-    await Auth.signOut();
-    setIsAuthenticated(false);
-    history.push("/login");
+  const handleLogout = () => {
+    Auth.signOut().then(() => {
+      setIsAuthenticated(false);
+      setEmail(null);
+      
+      pinterestLogout();
+      setIsConnected(false);
+
+      history.push("/login");
+    });
   };
 
   return (
@@ -61,15 +69,15 @@ const NavigationBar = () => {
                 <NavItem onClick={handleLogout}>Logout</NavItem>
               </>
             ) : (
-                <>
-                  <LinkContainer to="/signup">
-                    <NavItem>Signup</NavItem>
-                  </LinkContainer>
-                  <LinkContainer to="/login">
-                    <NavItem>Login</NavItem>
-                  </LinkContainer>
-                </>
-              )}
+              <>
+                <LinkContainer to="/signup">
+                  <NavItem>Signup</NavItem>
+                </LinkContainer>
+                <LinkContainer to="/login">
+                  <NavItem>Login</NavItem>
+                </LinkContainer>
+              </>
+            )}
           </Nav>
         </Navbar.Collapse>
       </div>

@@ -1,11 +1,11 @@
-import { atom } from 'recoil';
+import { atom } from "recoil";
 
 export const emailState = atom({
-    key: 'emailState',
-    default: null
+  key: "emailState",
+  default: null,
 });
 
 export const authenticatedState = atom({
-    key: 'authenticatedState',
-    default: false
+  key: "authenticatedState",
+  default: false,
 });

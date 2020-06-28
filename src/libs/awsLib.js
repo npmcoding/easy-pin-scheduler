@@ -1,4 +1,4 @@
-import Amplify, { Storage, Auth } from "aws-amplify";
+import Amplify, { Storage } from "aws-amplify";
 import AWS from "aws-sdk";
 import { v4 as uuidv4 } from "uuid";
 import { ONEHOUR } from "./constants";
@@ -31,23 +31,15 @@ export const initAWS = () => {
   });
 
   AWS.config.region = REGION;
+};
 
-  Auth.currentUserPoolUser()
-    .then(
-      ({
-        signInUserSession: {
-          idToken: { jwtToken },
-        },
-      }) => {
-        AWS.config.credentials = new AWS.CognitoIdentityCredentials({
-          IdentityPoolId: IDENTITY_POOL_ID,
-          Logins: {
-            [`cognito-idp.${REGION}.amazonaws.com/${USER_POOL_ID}`]: jwtToken,
-          },
-        });
-      }
-    )
-    .catch((e) => alert(e));
+export const initUserPoolUser = (jwtToken) => {
+  AWS.config.credentials = new AWS.CognitoIdentityCredentials({
+    IdentityPoolId: IDENTITY_POOL_ID,
+    Logins: {
+      [`cognito-idp.${REGION}.amazonaws.com/${USER_POOL_ID}`]: jwtToken,
+    },
+  });
 };
 
 export const s3Upload = (file) => {

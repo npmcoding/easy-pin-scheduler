@@ -11,14 +11,12 @@ const Profile = () => {
   const [isConnected, setIsConnected] = useRecoilState(connectedState);
 
   const handlePinterestLoginClick = () => {
-    pinterestLogin(x => {
-      console.log(x);
-      setIsConnected(true)
-    });
+    pinterestLogin(() => setIsConnected(true));
   }
 
   const handlePinterestLogoutClick = () => {
-    pinterestLogout(setIsConnected(false));
+    pinterestLogout()
+    setIsConnected(false);
   };
 
   return (

@@ -5,27 +5,40 @@ import { Auth } from "aws-amplify";
 import "./App.css";
 import Routes from "./Routes";
 import NavigationBar from "./components/NavigationBar/NavigationBar";
-import { authenticatedState } from "./atoms/userAtoms";
+import { emailState, authenticatedState } from "./atoms/userAtoms";
+import { isLoggedIn, pinterestLogout } from "./libs/pinterestLib";
+import { initUserPoolUser } from "./libs/awsLib";
 
 const App = () => {
   const [isAuthenticating, setIsAuthenticating] = useState(true);
+  const setEmail = useRecoilState(emailState)[1];
   const setIsAuthenticated = useRecoilState(authenticatedState)[1];
 
   useEffect(() => {
-    const onLoad = async () => {
-      try {
-        await Auth.currentSession();
-        setIsAuthenticated(true);
-      } catch (e) {
+    Auth.currentSession()
+      .then(
+        ({
+          idToken: {
+            jwtToken,
+            payload: { email },
+          },
+        }) => {
+          setIsAuthenticated(true);
+          setEmail(email);
+          initUserPoolUser(jwtToken);
+          setIsAuthenticating(false);
+        }
+      )
+      .catch((e) => {
+        if (isLoggedIn()) {
+          pinterestLogout();
+        }
         if (e !== "No current user") {
           alert(e);
         }
-      }
-      setIsAuthenticating(false);
-    };
-
-    onLoad();
-  }, [setIsAuthenticated]);
+        setIsAuthenticating(false);
+      });
+  }, [setIsAuthenticated, setEmail]);
 
   return (
     !isAuthenticating && (
