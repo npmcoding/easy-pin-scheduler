@@ -1,0 +1,25 @@
+export const MAX_ATTACHMENT_SIZE = 5000000;
+export const PINTEREST_APP_ID = "YOUR-PINTEREST_APP_ID";
+export const s3 = {
+    REGION: "YOUR-S3-REGION",
+    BUCKET: "YOUR-S3-BUCKET",
+    IMG_BUCKET: "YOUR-S3-SHORT-URL-BUCKET"
+};
+export const apiGateway = {
+    REGION: "YOUR-API-GATEWAY-REGION",
+    URL: "YOUR-API-GATEWAY-URL"
+};
+export const cognito = {
+    REGION: "YOUR-COGNITO-REGION",
+    USER_POOL_ID: "YOUR-COGNITO-USER_POOL_ID",
+    APP_CLIENT_ID: "YOUR-COGNITO-APP_CLIENT_ID",
+    IDENTITY_POOL_ID: "YOUR-COGNITO-IDENTITY_POOL_ID"
+}
+
+export default {
+    MAX_ATTACHMENT_SIZE,
+    PINTEREST_APP_ID,
+    s3,
+    apiGateway,
+    cognito
+};
