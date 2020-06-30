@@ -8,7 +8,7 @@ import {
   Button,
 } from "react-bootstrap";
 import { createPin } from "../../libs/epsLib";
-import { formatFilename, handleImageUpload } from "../../libs/awsLib";
+import { handleImageUpload } from "../../libs/awsLib";
 import LoaderButton from "../../components/LoaderButton/LoaderButton";
 import { useBoards } from "../../libs/boardsUtil";
 import { getAccessToken } from "../../libs/pinterestLib";
@@ -26,12 +26,14 @@ const NewPin = ({ history }) => {
   const handleFileChange = async (e) => {
     e.preventDefault();
     const currentFile = e.target.files[0];
-    const { newImagePath, newImageURL } = await handleImageUpload(
-      currentFile,
-      imagePath
-    );
-    setImagePath(newImagePath);
-    setImageURL(newImageURL || imageURL);
+    if (currentFile) {
+      const { newImagePath, newImageURL } = await handleImageUpload(
+        currentFile,
+        imagePath
+      );
+      setImagePath(newImagePath);
+      setImageURL(newImageURL || imageURL);
+    }
   };
 
   const handleSubmit = (e) => {
@@ -100,11 +102,7 @@ const NewPin = ({ history }) => {
           {imageURL && (
             <FormControl.Static>
               <a target="_blank" rel="noopener noreferrer" href={imageURL}>
-                <img
-                  className="thumb"
-                  src={imageURL}
-                  alt={formatFilename(imagePath)}
-                />
+                <img className="thumb" src={imageURL} alt={imagePath} />
               </a>
             </FormControl.Static>
           )}

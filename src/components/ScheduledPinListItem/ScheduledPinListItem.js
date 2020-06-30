@@ -2,31 +2,34 @@ import React from "react";
 import { LinkContainer } from "react-router-bootstrap";
 import { ListGroupItem, Button } from "react-bootstrap";
 import { createShortURL } from "../../libs/awsLib";
-// import { createPin } from "../../libs/pinterestLib";
+import { createPin } from "../../libs/pinterestLib";
 import "./ScheduledPinListItem.css";
 
 const ScheduledPinListItem = (pin) => {
-  const PostPin = async ({ link, board, note, imagePath, awsKey }) => {
-    const data = {
-      imagePath,
-      link: link || "",
-      board: board.id,
-      note: note || "",
-    };
-    // console.log(data, awsKey);
-
+  const PostPin = async ({ link, board, note, awsKey }) => {
     createShortURL(awsKey)
-    .then(shortURL => console.log(shortURL))
-    .catch(e => alert(e));
-    // createPin(data, (response) => {
-    //   console.log(response);
-    /*
-          update scheduled Pin with "posted" status, posted date 
-          and response.data.url value so that the "Post" button 
-          can be turned into "View" and the user is notified of 
-          successful post. May need error handling here.
-          */
-    // });
+      .then((shortURL) => {
+        // console.log(shortURL))
+        if (shortURL) {
+          const data = {
+            image_url: shortURL,
+            link: link || null,
+            board: board.id,
+            note: note || "",
+          };
+          //   console.log(data, awsKey);
+          createPin(data, (response) => {
+            console.log(response);
+            /*
+                update scheduled Pin with "posted" status, posted date 
+                and response.data.url value so that the "Post" button 
+                can be turned into "View" and the user is notified of 
+                successful post. May need error handling here.
+                */
+          });
+        }
+      })
+      .catch((e) => alert(e));
   };
 
   return (

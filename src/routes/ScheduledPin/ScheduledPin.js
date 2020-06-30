@@ -3,10 +3,7 @@ import { API, Storage } from "aws-amplify";
 import { FormGroup, FormControl, ControlLabel, Button } from "react-bootstrap";
 import LoaderButton from "../../components/LoaderButton/LoaderButton";
 import { savePin, deletePin } from "../../libs/epsLib";
-import {
-  formatFilename,
-  handleImageUpload,
-} from "../../libs/awsLib";
+import { handleImageUpload } from "../../libs/awsLib";
 import "./ScheduledPin.css";
 
 const ScheduledPin = ({ match, history }) => {
@@ -129,11 +126,7 @@ const ScheduledPin = ({ match, history }) => {
             {imageURL && (
               <FormControl.Static>
                 <a target="_blank" rel="noopener noreferrer" href={imageURL}>
-                  <img
-                    className="thumb"
-                    src={imageURL}
-                    alt={formatFilename(imagePath)}
-                  />
+                  <img className="thumb" src={imageURL} alt={imagePath} />
                 </a>
               </FormControl.Static>
             )}

@@ -1,5 +1,6 @@
 import Amplify, { Storage } from "aws-amplify";
 import AWS from "aws-sdk";
+import { Auth } from "aws-amplify";
 import { v4 as uuidv4 } from "uuid";
 import { ONEHOUR } from "./constants";
 import { cognito, s3, apiGateway, MAX_ATTACHMENT_SIZE } from "../config";
@@ -62,8 +63,6 @@ export const s3Remove = (key) => {
   Storage.vault.remove(key, { level: "private" }).catch((e) => alert(e));
 };
 
-export const formatFilename = (fileName) => fileName.replace(/^\w+-/, "");
-
 export const handleImageUpload = async (currentFile, existingImagePath) => {
   if (currentFile && currentFile.size > MAX_ATTACHMENT_SIZE) {
     alert(
@@ -78,7 +77,7 @@ export const handleImageUpload = async (currentFile, existingImagePath) => {
     await s3Remove(existingImagePath);
   }
   const newImagePath = await s3Upload(currentFile);
-  const newImageURL = await Storage.vault.get(newImagePath);
+  const newImageURL = newImagePath ? await Storage.vault.get(newImagePath) : null;
 
   return {
     newImagePath,
@@ -91,7 +90,13 @@ export const createShortURL = async (awsKey) => {
    * get signed url of target image, then set as
    * website redirect location
    ***/
+
   try {
+    const {
+      idToken: { jwtToken },
+    } = await Auth.currentSession();
+    initUserPoolUser(jwtToken);
+
     const AWSs3 = new AWS.S3();
 
     const redirectURL = await AWSs3.getSignedUrlPromise("getObject", {
