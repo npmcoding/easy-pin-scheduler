@@ -86,36 +86,42 @@ export const handleImageUpload = async (currentFile, existingImagePath) => {
   };
 };
 
-export const createShortURL = async (imagePath) => {
+export const createShortURL = async (awsKey) => {
   /***
    * get signed url of target image, then set as
    * website redirect location
    ***/
-  const AWSs3 = new AWS.S3();
+  try {
+    const AWSs3 = new AWS.S3();
 
-  const redirectURL = await AWSs3.getSignedUrlPromise("getObject", {
-    Bucket: s3.BUCKET,
-    Key: getAWSKey(imagePath),
-  });
+    const redirectURL = await AWSs3.getSignedUrlPromise("getObject", {
+      Bucket: s3.BUCKET,
+      Key: awsKey,
+    });
+    // console.log({ redirectURL }, redirectURL.length);
 
-  // console.log({ redirectURL }, redirectURL.length);
-
-  const key = uuidv4();
-  const params = {
-    Bucket: s3.IMG_BUCKET,
-    Key: key,
-    Expires: new Date(Date.now() + ONEHOUR),
-    WebsiteRedirectLocation: redirectURL,
-  };
-
-  AWSs3.putObject(params, function (err, data) {
-    if (err) {
-      console.log(err, err.stack); // an error occurred
-    } else {
-      console.log(key, data); // successful response
-    }
-  });
+    return new Promise((resolve, reject) => {
+      const key = uuidv4();
+      const params = {
+        Bucket: s3.IMG_BUCKET,
+        Key: key,
+        Expires: new Date(Date.now() + ONEHOUR),
+        WebsiteRedirectLocation: redirectURL,
+      };
+      AWSs3.putObject(params, function (err) {
+        if (err) {
+          console.log(err, err.stack); // an error occurred
+          reject(err);
+        } else {
+          // console.log(key, data); // successful response
+          resolve(
+            `http://${s3.IMG_BUCKET}.s3-website.${s3.REGION}.amazonaws.com/${key}`
+          );
+        }
+      });
+    });
+  } catch (e) {
+    alert(e);
+    console.warn(e);
+  }
 };
-
-export const getAWSKey = (imagePath) =>
-  `private/${AWS.config.credentials.identityId}/${imagePath}`;

@@ -6,7 +6,6 @@ import { savePin, deletePin } from "../../libs/epsLib";
 import {
   formatFilename,
   handleImageUpload,
-  getAWSKey,
 } from "../../libs/awsLib";
 import "./ScheduledPin.css";
 
@@ -62,7 +61,6 @@ const ScheduledPin = ({ match, history }) => {
       note,
       link,
       imagePath,
-      awsKey: getAWSKey(imagePath),
     };
 
     savePin(updatedPin, match.params.id)

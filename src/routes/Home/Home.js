@@ -1,10 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { useRecoilState } from "recoil";
-import { PageHeader, ListGroup, ListGroupItem, Button } from "react-bootstrap";
+import { PageHeader, ListGroup, ListGroupItem } from "react-bootstrap";
 import { LinkContainer } from "react-router-bootstrap";
 import { API, Storage } from "aws-amplify";
-import { formatFilename, createShortURL } from "../../libs/awsLib";
-// import { createPin } from "../../libs/pinterestLib";
+import ScheduledPinListItem from "../../components/ScheduledPinListItem/ScheduledPinListItem";
 import { connectedState } from "../../atoms/pinterestAtoms";
 import { authenticatedState } from "../../atoms/userAtoms";
 import "./Home.css";
@@ -15,12 +14,10 @@ const Home = () => {
   const [isConnected] = useRecoilState(connectedState);
   const [isAuthenticated] = useRecoilState(authenticatedState);
 
-  const fetchPins = () => API.get("scheduledPins", "/scheduledPins");
-
   useEffect(() => {
     if (!isAuthenticated) return;
 
-    fetchPins()
+    API.get("scheduledPins", "/scheduledPins")
       .then((pins) => {
         setScheduledPins(pins);
         fetchThumbnails(pins);
@@ -33,9 +30,9 @@ const Home = () => {
   const fetchThumbnails = (pins) => {
     Promise.all(
       pins.map((pin) => {
-        if(!pin.imagePath) {
+        if (!pin.imagePath) {
           return pin;
-        }        
+        }
         return Storage.vault.get(pin.imagePath).then((image_url) => {
           return {
             ...pin,
@@ -44,27 +41,6 @@ const Home = () => {
         });
       })
     ).then((fetchedPins) => setScheduledPins(fetchedPins));
-  };
-
-  const PostPin = ({ link, board, note, imagePath }) => {
-    const data = {
-      imagePath,
-      link: link || "",
-      board: board.id,
-      note: note || "",
-    };
-    console.log(data);
-
-    createShortURL(imagePath);
-    // createPin(data, (response) => {
-    //   console.log(response);
-      /*
-      update scheduled Pin with "posted" status, posted date 
-      and response.data.url value so that the "Post" button 
-      can be turned into "View" and the user is notified of 
-      successful post. May need error handling here.
-      */
-    // });
   };
 
   const renderPinsList = () => {
@@ -84,33 +60,7 @@ const Home = () => {
             </h4>
           </ListGroupItem>
         </LinkContainer>
-        {scheduledPins.map((pin) => {
-          return (
-            <div key={pin.scheduledPinId} className="scheduled-pin-list-item">
-              <LinkContainer
-                className="scheduled-pin-edit-link"
-                to={`/scheduledPins/${pin.scheduledPinId}`}
-              >
-                <ListGroupItem header={pin.note.trim().split("\n")[0]}>
-                  {`Created: ${new Date(pin.createdAt).toLocaleString()}`}
-                  {pin.image_url && (
-                    <img
-                      className="thumb"
-                      src={pin.image_url}
-                      alt={formatFilename(pin.imagePath)}
-                    />
-                  )}
-                </ListGroupItem>
-              </LinkContainer>
-              <Button
-                className="schedule-pin-post-now-button"
-                onClick={() => PostPin(pin)}
-              >
-                Post now
-              </Button>
-            </div>
-          );
-        })}
+        {scheduledPins.map((pin) => ScheduledPinListItem(pin))}
       </>
     );
   };

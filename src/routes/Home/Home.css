@@ -24,31 +24,3 @@
 .Home .scheduledPins p {
   color: #666;
 }
-
-.Home .scheduled-pin-list-item {
-  display: flex;
-  align-items: center;
-  position: relative;
-}
-
-.Home .scheduled-pin-edit-link {
-  width: 100%;
-  border-top-right-radius: 0px;
-}
-
-.Home .schedule-pin-post-now-button {
-  border-radius: 0px;
-  border-left: none;
-  margin-bottom: -1px;
-  padding: 26px 12px;
-}
-
- .Home .list-group-item-text .thumb {
-  position: absolute;
-  right: 20px;
-  top: 6px;
-  border: 1px solid #ddd;
-  border-radius: 4px;
-  padding: 5px;
-  max-height: 60px;
-}

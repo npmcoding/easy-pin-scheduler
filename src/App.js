@@ -23,12 +23,14 @@ const App = () => {
             payload: { email },
           },
         }) => {
-          setIsAuthenticated(true);
           setEmail(email);
           initUserPoolUser(jwtToken);
-          setIsAuthenticating(false);
         }
       )
+      .then(() => {
+        setIsAuthenticated(true);
+        setIsAuthenticating(false);
+      })
       .catch((e) => {
         if (isLoggedIn()) {
           pinterestLogout();
