@@ -77,7 +77,9 @@ export const handleImageUpload = async (currentFile, existingImagePath) => {
     await s3Remove(existingImagePath);
   }
   const newImagePath = await s3Upload(currentFile);
-  const newImageURL = newImagePath ? await Storage.vault.get(newImagePath) : null;
+  const newImageURL = newImagePath
+    ? await Storage.vault.get(newImagePath)
+    : null;
 
   return {
     newImagePath,
@@ -105,7 +107,7 @@ export const createShortURL = async (awsKey) => {
     });
     // console.log({ redirectURL }, redirectURL.length);
 
-    return new Promise((resolve, reject) => {
+    return new Promise((resolve) => {
       const key = uuidv4();
       const params = {
         Bucket: s3.IMG_BUCKET,
@@ -116,7 +118,7 @@ export const createShortURL = async (awsKey) => {
       AWSs3.putObject(params, function (err) {
         if (err) {
           console.log(err, err.stack); // an error occurred
-          reject(err);
+          resolve(null);
         } else {
           // console.log(key, data); // successful response
           resolve(

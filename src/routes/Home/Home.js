@@ -33,10 +33,10 @@ const Home = () => {
         if (!pin.imagePath) {
           return pin;
         }
-        return Storage.vault.get(pin.imagePath).then((image_url) => {
+        return Storage.vault.get(pin.imagePath).then((imageUrl) => {
           return {
             ...pin,
-            image_url,
+            imageUrl,
           };
         });
       })

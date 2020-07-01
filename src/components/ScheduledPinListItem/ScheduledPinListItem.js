@@ -5,50 +5,53 @@ import { createShortURL } from "../../libs/awsLib";
 import { createPin } from "../../libs/pinterestLib";
 import "./ScheduledPinListItem.css";
 
-const ScheduledPinListItem = (pin) => {
-  const PostPin = async ({ link, board, note, awsKey }) => {
-    createShortURL(awsKey)
-      .then((shortURL) => {
-        // console.log(shortURL))
-        if (shortURL) {
-          const data = {
-            image_url: shortURL,
-            link: link || null,
-            board: board.id,
-            note: note || "",
-          };
-          //   console.log(data, awsKey);
-          createPin(data, (response) => {
-            console.log(response);
-            /*
-                update scheduled Pin with "posted" status, posted date 
-                and response.data.url value so that the "Post" button 
-                can be turned into "View" and the user is notified of 
-                successful post. May need error handling here.
-                */
-          });
-        }
-      })
-      .catch((e) => alert(e));
+const ScheduledPinListItem = ({
+  scheduledPinId,
+  createdAt,
+  link,
+  board,
+  note,
+  imagePath,
+  imageUrl,
+  awsKey,
+}) => {
+  const PostPin = async () => {
+    // console.log({ scheduledPinId, createdAt, link, board, note, imagePath, imageUrl, awsKey });
+    try {
+      const data = {
+        image_url: await createShortURL(awsKey),
+        link: link || "",
+        board: board.id,
+        note: note || "",
+      };
+      // console.log(data);
+      createPin(data, (response) => {
+        console.log(response);
+      });
+      /*
+      update scheduled Pin with "posted" status, posted date 
+      and response.data.url value so that the "Post" button 
+      can be turned into "View" and the user is notified of 
+      successful post. May need error handling here.
+      */
+    } catch (e) {
+      alert(e);
+      console.warn(e);
+    }
   };
 
   return (
-    <div key={pin.scheduledPinId} className="scheduled-pin-list-item">
+    <div key={scheduledPinId} className="scheduled-pin-list-item">
       <LinkContainer
         className="scheduled-pin-edit-link"
-        to={`/scheduledPins/${pin.scheduledPinId}`}
+        to={`/scheduledPins/${scheduledPinId}`}
       >
-        <ListGroupItem header={pin.note.trim().split("\n")[0]}>
-          {`Created: ${new Date(pin.createdAt).toLocaleString()}`}
-          {pin.image_url && (
-            <img className="thumb" src={pin.image_url} alt={pin.imagePath} />
-          )}
+        <ListGroupItem header={note.trim().split("\n")[0]}>
+          {`Created: ${new Date(createdAt).toLocaleString()}`}
+          {imageUrl && <img className="thumb" src={imageUrl} alt={imagePath} />}
         </ListGroupItem>
       </LinkContainer>
-      <Button
-        className="schedule-pin-post-now-button"
-        onClick={() => PostPin(pin)}
-      >
+      <Button className="schedule-pin-post-now-button" onClick={PostPin}>
         Post now
       </Button>
     </div>
