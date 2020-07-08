@@ -1,11 +1,12 @@
 import React from "react";
 import { LinkContainer } from "react-router-bootstrap";
 import { ListGroupItem, Button } from "react-bootstrap";
-import { createShortURL } from "../../libs/awsLib";
-import { createPin } from "../../libs/pinterestLib";
+import { postPin } from "../../libs/epsLib";
+// import { createPin } from "../../libs/pinterestLib";
 import "./ScheduledPinListItem.css";
 
 const ScheduledPinListItem = ({
+  accessToken,
   scheduledPinId,
   createdAt,
   link,
@@ -18,16 +19,8 @@ const ScheduledPinListItem = ({
   const PostPin = async () => {
     // console.log({ scheduledPinId, createdAt, link, board, note, imagePath, imageUrl, awsKey });
     try {
-      const data = {
-        image_url: await createShortURL(awsKey),
-        link: link || "",
-        board: board.id,
-        note: note || "",
-      };
+      postPin({accessToken, awsKey, board, note, link});
       // console.log(data);
-      createPin(data, (response) => {
-        console.log(response);
-      });
       /*
       update scheduled Pin with "posted" status, posted date 
       and response.data.url value so that the "Post" button 

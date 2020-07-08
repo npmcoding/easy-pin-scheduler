@@ -24,3 +24,13 @@ export const deletePin = (imagePath, id) =>
       alert("Delete unsuccessful");
       console.log(e);
     });
+
+export const postPin = (scheduledPin) =>
+  API.post("scheduledPins", "/postPin", {
+    body: scheduledPin,
+  })
+    .then((response) => console.log(response))
+    .catch((e) => {
+      alert("There was a problem when attempting to pin");
+      console.log(e);
+    });
