@@ -61,13 +61,7 @@ const ScheduledPin = ({ match, history }) => {
     };
 
     savePin(updatedPin, match.params.id)
-      .then((success) => {
-        if (success) {
-          history.push("/");
-        } else {
-          alert("Update unsuccessful");
-        }
-      })
+      .then(() => history.push("/"))
       .catch((e) => {
         alert(e);
         setIsLoading(false);
@@ -86,15 +80,9 @@ const ScheduledPin = ({ match, history }) => {
     setIsDeleting(true);
 
     deletePin(imagePath, match.params.id)
-      .then((success) => {
-        if (success) {
-          history.push("/");
-        } else {
-          alert("Delete unsuccessful");
-        }
-      })
+      .then(() => history.push("/"))
       .catch((e) => {
-        alert(e);
+        console.log(e);
         setIsDeleting(false);
       });
   };

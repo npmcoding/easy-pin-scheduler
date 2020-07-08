@@ -60,7 +60,7 @@ export const s3Upload = (file) => {
 };
 
 export const s3Remove = (key) => {
-  Storage.vault.remove(key, { level: "private" }).catch((e) => alert(e));
+  Storage.vault.remove(key, { level: "private" }).catch((e) => console.log(e));
 };
 
 export const handleImageUpload = async (currentFile, existingImagePath) => {

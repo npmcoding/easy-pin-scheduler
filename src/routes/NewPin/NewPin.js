@@ -54,15 +54,9 @@ const NewPin = ({ history }) => {
       board: selectedBoard,
     };
     createPin(pin)
-      .then((success) => {
-        if (success) {
-          history.push("/");
-        } else {
-          alert("Pin creation unsuccessful");
-        }
-      })
+      .then(() => history.push("/"))
       .catch((e) => {
-        alert(e);
+        console.log(e);
         setIsLoading(false);
       });
   };
