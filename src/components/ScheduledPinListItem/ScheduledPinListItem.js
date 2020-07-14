@@ -15,11 +15,12 @@ const ScheduledPinListItem = ({
   imagePath,
   imageUrl,
   awsKey,
+  userId
 }) => {
   const PostPin = async () => {
     // console.log({ scheduledPinId, createdAt, link, board, note, imagePath, imageUrl, awsKey });
     try {
-      postPin({accessToken, awsKey, board, note, link});
+      postPin({accessToken, awsKey, board, note, link, userId, scheduledPinId});
       // console.log(data);
       /*
       update scheduled Pin with "posted" status, posted date 
