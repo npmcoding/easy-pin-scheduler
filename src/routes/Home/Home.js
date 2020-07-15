@@ -6,6 +6,7 @@ import { API, Storage } from "aws-amplify";
 import ScheduledPinListItem from "../../components/ScheduledPinListItem/ScheduledPinListItem";
 import { connectedState } from "../../atoms/pinterestAtoms";
 import { authenticatedState } from "../../atoms/userAtoms";
+import { postPin } from "../../libs/epsLib";
 import "./Home.css";
 
 const Home = () => {
@@ -43,6 +44,21 @@ const Home = () => {
     ).then((fetchedPins) => setScheduledPins(fetchedPins));
   };
 
+  const handlePostPin = (data) => {
+    postPin(data)
+      .then((response) => {
+        console.log(response);
+        return scheduledPins
+          .filter((pin) => pin.scheduledPinId !== response.data.scheduledPinId)
+          .push(response.data);
+      })
+      .then((newPinList) => setScheduledPins(newPinList))
+      .catch((e) => {
+        alert(e);
+        console.warn(e);
+      });
+  };
+
   const renderPinsList = () => {
     // console.log({ scheduledPins });
     return (
@@ -60,7 +76,9 @@ const Home = () => {
             </h4>
           </ListGroupItem>
         </LinkContainer>
-        {scheduledPins.map((pin) => ScheduledPinListItem(pin))}
+        {scheduledPins.map((pin) =>
+          ScheduledPinListItem({ ...pin, handlePostPin })
+        )}
       </>
     );
   };

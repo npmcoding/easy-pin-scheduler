@@ -1,7 +1,6 @@
 import React from "react";
-import { LinkContainer } from "react-router-bootstrap";
-import { ListGroupItem, Button } from "react-bootstrap";
-import { postPin } from "../../libs/epsLib";
+import { Link } from "react-router-dom";
+import { Button } from "react-bootstrap";
 // import { createPin } from "../../libs/pinterestLib";
 import "./ScheduledPinListItem.css";
 
@@ -15,37 +14,55 @@ const ScheduledPinListItem = ({
   imagePath,
   imageUrl,
   awsKey,
-  userId
+  userId,
+  updatedAt,
+  scheduledPinStatus,
+  statusMessage,
+  handlePostPin,
 }) => {
-  const PostPin = async () => {
-    // console.log({ scheduledPinId, createdAt, link, board, note, imagePath, imageUrl, awsKey });
-    try {
-      postPin({accessToken, awsKey, board, note, link, userId, scheduledPinId});
-      // console.log(data);
-      /*
-      update scheduled Pin with "posted" status, posted date 
-      and response.data.url value so that the "Post" button 
-      can be turned into "View" and the user is notified of 
-      successful post. May need error handling here.
-      */
-    } catch (e) {
-      alert(e);
-      console.warn(e);
-    }
+  const onPostPinClick = () => {
+    handlePostPin({
+      accessToken,
+      awsKey,
+      board,
+      note,
+      link,
+      userId,
+      scheduledPinId,
+    });
   };
 
   return (
     <div key={scheduledPinId} className="scheduled-pin-list-item">
-      <LinkContainer
+      <Link
         className="scheduled-pin-edit-link"
         to={`/scheduledPins/${scheduledPinId}`}
       >
-        <ListGroupItem header={note.trim().split("\n")[0]}>
-          {`Created: ${new Date(createdAt).toLocaleString()}`}
+        <div className="scheduled-pin-container">
+          <div className="scheduled-pin-body">
+            <h4 className="scheduled-pin-header">
+              {note.trim().split("\n")[0]}
+            </h4>
+            <div className="scheduled-pin-messages">
+              <div
+                className={`scheduled-pin-status-message ${scheduledPinStatus}`}
+              >
+                {statusMessage}
+              </div>
+              <div className="scheduled-pin-createdAt">
+                {`Created: ${new Date(createdAt).toLocaleString()}`}
+              </div>
+              {updatedAt && (
+                <div className="scheduled-pin-updatedAt">
+                  {`Updated: ${new Date(updatedAt).toLocaleString()}`}
+                </div>
+              )}
+            </div>
+          </div>
           {imageUrl && <img className="thumb" src={imageUrl} alt={imagePath} />}
-        </ListGroupItem>
-      </LinkContainer>
-      <Button className="schedule-pin-post-now-button" onClick={PostPin}>
+        </div>
+      </Link>
+      <Button className="schedule-pin-post-now-button" onClick={onPostPinClick}>
         Post now
       </Button>
     </div>
