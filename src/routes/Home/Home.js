@@ -48,9 +48,10 @@ const Home = () => {
     postPin(data)
       .then((response) => {
         console.log(response);
+        const postedPin = response.Attributes;
         return scheduledPins
-          .filter((pin) => pin.scheduledPinId !== response.data.scheduledPinId)
-          .push(response.data);
+          .filter((pin) => pin.scheduledPinId !== postedPin.scheduledPinId)
+          .push(postedPin);
       })
       .then((newPinList) => setScheduledPins(newPinList))
       .catch((e) => {
