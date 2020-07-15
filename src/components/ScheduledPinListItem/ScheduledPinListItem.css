@@ -2,26 +2,98 @@
   display: flex;
   align-items: center;
   position: relative;
+  margin-bottom: -1px;
+  background-color: #fff;
+  border: 1px solid #ddd;
+  color: #555;
+}
+
+.scheduled-pin-list-item:last-child {
+  border-bottom-left-radius: 4px;
+  border-bottom-right-radius: 4px;
 }
 
 .scheduled-pin-edit-link {
   width: 100%;
   border-top-right-radius: 0px;
+  color: #555;
 }
 
-.schedule-pin-post-now-button {
-  border-radius: 0px;
-  border-left: none;
-  margin-bottom: -1px;
-  padding: 26px 12px;
+.scheduled-pin-edit-link:hover,
+.scheduled-pin-edit-link:focus {
+  color: #555;
+  text-decoration: none;
+  background-color: rgba(143, 217, 228, 0.1);
 }
 
-.list-group-item-text .thumb {
-  position: absolute;
-  right: 20px;
-  top: 6px;
+.scheduled-pin-container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 20px;
+  border-right: 1px solid rgb(221, 221, 221);
+}
+
+.scheduled-pin-container .thumb {
   border: 1px solid #ddd;
   border-radius: 4px;
   padding: 5px;
   max-height: 60px;
+  background-color: white;
+  margin: 0 20px;
+}
+
+.scheduled-pin-body {
+  display: flex;
+  flex-direction: column;
+}
+
+.scheduled-pin-status-message {
+  font-weight: 600;
+}
+
+.scheduled-pin-status-message::before {
+  margin-right: 5px;
+}
+
+.scheduled-pin-status-message.error {
+  color: rgb(255, 0, 0);
+}
+
+.scheduled-pin-status-message.error::before {
+  content: "\26D4";
+}
+
+.scheduled-pin-status-message.posted {
+  color: rgb(51, 204, 51);
+}
+
+.scheduled-pin-status-message.posted::before {
+  content: "\2713";
+}
+
+.scheduled-pin-status-message.pending {
+  color: rgb(0, 162, 255);
+}
+
+.scheduled-pin-status-message.pending::before {
+  content: "\231B";
+}
+
+.scheduled-pin-status-message.incomplete {
+  color: rgb(255, 153, 0);
+}
+
+.scheduled-pin-status-message.incomplete::before {
+  content: "\26A0";
+}
+
+.schedule-pin-post-now-button {
+  border-radius: 0px;
+  border: none;
+  margin-bottom: -1px;
+  box-sizing: border-box;
+  display: block;
+  height: 100%;
+  cursor: auto;
 }
