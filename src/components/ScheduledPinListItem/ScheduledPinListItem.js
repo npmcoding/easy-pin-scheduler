@@ -19,6 +19,7 @@ const ScheduledPinListItem = ({
   scheduledPinStatus,
   statusMessage,
   handlePostPin,
+  pinURL
 }) => {
   const onPostPinClick = () => {
     handlePostPin({
@@ -31,6 +32,28 @@ const ScheduledPinListItem = ({
       scheduledPinId,
     });
   };
+
+  const actionButton = () => {
+    switch (scheduledPinStatus) {
+      case 'posted':
+
+        return (
+          <a className="schedule-pin-view-pin-link" href={pinURL}>
+            View Pin &#8599;
+          </a>
+        )
+      case 'pending':
+      case 'tooManyRequests':
+      case 'error':
+        return (
+          <Button className="schedule-pin-post-now-button" onClick={onPostPinClick}>
+            Post Now
+          </Button>
+        )
+      default:
+        return null
+    }
+  }
 
   return (
     <div key={scheduledPinId} className="scheduled-pin-list-item">
@@ -62,9 +85,7 @@ const ScheduledPinListItem = ({
           {imageUrl && <img className="thumb" src={imageUrl} alt={imagePath} />}
         </div>
       </Link>
-      <Button className="schedule-pin-post-now-button" onClick={onPostPinClick}>
-        Post now
-      </Button>
+      {actionButton()}
     </div>
   );
 };
