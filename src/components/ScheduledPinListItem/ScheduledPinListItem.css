@@ -91,11 +91,11 @@
   content: "\231B";
 }
 
-.scheduled-pin-status-message.incomplete {
+.scheduled-pin-status-message.draft {
   color: rgb(255, 153, 0);
 }
 
-.scheduled-pin-status-message.incomplete::before {
+.scheduled-pin-status-message.draft::before {
   content: "\26A0";
 }
 
