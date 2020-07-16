@@ -38,7 +38,7 @@ const ScheduledPinListItem = ({
       case 'posted':
 
         return (
-          <a className="schedule-pin-view-pin-link" href={pinURL}>
+          <a className="schedule-pin-view-pin-link" href={pinURL} target="_blank">
             View Pin &#8599;
           </a>
         )
