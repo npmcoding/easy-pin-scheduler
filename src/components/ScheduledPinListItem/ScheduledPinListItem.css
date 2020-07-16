@@ -54,6 +54,11 @@
   flex-direction: column;
 }
 
+.scheduled-pin-header {
+  width: 20em;
+  text-overflow: ellipsis;
+}
+
 .scheduled-pin-status-message {
   font-weight: 600;
 }

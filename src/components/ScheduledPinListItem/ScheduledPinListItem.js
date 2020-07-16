@@ -33,12 +33,11 @@ const ScheduledPinListItem = ({
     });
   };
 
-  const actionButton = () => {
+  const ActionButton = () => {
     switch (scheduledPinStatus) {
       case 'posted':
-
         return (
-          <a className="schedule-pin-view-pin-link" href={pinURL} target="_blank">
+          <a className="schedule-pin-view-pin-link" href={pinURL} target="_blank" rel="noopener noreferrer">
             View Pin &#8599;
           </a>
         )
@@ -55,16 +54,25 @@ const ScheduledPinListItem = ({
     }
   }
 
-  return (
-    <div key={scheduledPinId} className="scheduled-pin-list-item">
+  const LinkWrapper = ({ children }) => (
+    scheduledPinStatus !== 'posted' ?
       <Link
         className="scheduled-pin-edit-link"
         to={`/scheduledPins/${scheduledPinId}`}
       >
+        {children}
+      </Link>
+      :
+      children
+  )
+
+  return (
+    <div key={scheduledPinId} className="scheduled-pin-list-item">
+      <LinkWrapper>
         <div className="scheduled-pin-container">
           <div className="scheduled-pin-body">
             <h4 className="scheduled-pin-header">
-              {note.trim().split("\n")[0]}
+              {note || '{ No title }'}
             </h4>
             <div className="scheduled-pin-messages">
               <div
@@ -84,9 +92,9 @@ const ScheduledPinListItem = ({
           </div>
           {imageUrl && <img className="thumb" src={imageUrl} alt={imagePath} />}
         </div>
-      </Link>
-      {actionButton()}
-    </div>
+      </LinkWrapper>
+      <ActionButton />
+    </div >
   );
 };
 
