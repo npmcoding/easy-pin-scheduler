@@ -68,8 +68,8 @@ const ScheduledPinListItem = ({
         {children}
       </Link>
     ) : (
-      children
-    );
+        children
+      );
 
   return (
     <div key={scheduledPinId} className="scheduled-pin-list-item">
@@ -94,12 +94,12 @@ const ScheduledPinListItem = ({
             </div>
           </div>
           {imageUrl && <img className="thumb" src={imageUrl} alt={imagePath} />}
+          {(!scheduledPinStatus || scheduledPinStatus === "draft") && (
+            <div className="scheduled-pin-action-placeholder" />
+          )}
         </div>
       </LinkWrapper>
       <ActionButton />
-      {(!scheduledPinStatus || scheduledPinStatus === "draft") && (
-        <div className="scheduled-pin-action-placeholder" />
-      )}
     </div>
   );
 };

@@ -36,7 +36,7 @@
 .scheduled-pin-container {
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  justify-content: flex-end;
   padding: 10px 20px;
   width: 100%
 }
@@ -53,6 +53,7 @@
 .scheduled-pin-body {
   display: flex;
   flex-direction: column;
+  margin-right: auto;
 }
 
 .scheduled-pin-header {
