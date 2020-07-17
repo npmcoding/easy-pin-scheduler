@@ -49,12 +49,10 @@ const Home = () => {
       .then((response) => {
         console.log(response);
         const postedPin = response.Attributes;
-        return scheduledPins
+        const newPinList = scheduledPins
           .filter((pin) => pin.scheduledPinId !== postedPin.scheduledPinId)
-          .push(postedPin);
-      })
-      .then((newPinList) => {
-        console.log(newPinList);
+          .concat([postedPin]);
+          
         setScheduledPins(newPinList)
       })
       .catch((e) => {
@@ -75,8 +73,8 @@ const Home = () => {
                   <b>{"\uFF0B"}</b> Create a new scheduled pin
                 </>
               ) : (
-                <>Connect to your Pinterest account to create new pins</>
-              )}
+                  <>Connect to your Pinterest account to create new pins</>
+                )}
             </h4>
           </ListGroupItem>
         </LinkContainer>
