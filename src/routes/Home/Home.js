@@ -53,7 +53,10 @@ const Home = () => {
           .filter((pin) => pin.scheduledPinId !== postedPin.scheduledPinId)
           .push(postedPin);
       })
-      .then((newPinList) => setScheduledPins(newPinList))
+      .then((newPinList) => {
+        console.log(newPinList);
+        setScheduledPins(newPinList)
+      })
       .catch((e) => {
         alert(e);
         console.warn(e);

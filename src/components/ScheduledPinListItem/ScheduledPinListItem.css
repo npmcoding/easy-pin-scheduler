@@ -1,6 +1,7 @@
 .scheduled-pin-list-item {
   display: flex;
-  align-items: center;
+  align-items: stretch;
+  justify-content: space-between;
   position: relative;
   margin-bottom: -1px;
   background-color: #fff;
@@ -37,7 +38,7 @@
   align-items: center;
   justify-content: space-between;
   padding: 10px 20px;
-  width: 90%
+  width: 100%
 }
 
 .scheduled-pin-container .thumb {
@@ -99,32 +100,33 @@
   content: "\26A0";
 }
 
-.schedule-pin-post-now-button, .schedule-pin-view-pin-link {
-  position: absolute;
-  top: 0;
-  right: 0;
+.schedule-pin-post-now-button, .scheduled-pin-view-pin-link {
   border-radius: 0px;
   border: none;
   border-left: 1px solid rgb(221, 221, 221);
-  height: 100%;
   width: 10%;
   cursor: auto;
   white-space: normal;
+  padding: 6px 12px;
 }
 
 .scheduled-pin-list-item:last-child .schedule-pin-post-now-button {
   border-bottom-right-radius: 4px;
 }
 
-.schedule-pin-view-pin-link {
+.scheduled-pin-view-pin-link {
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
 }
 
-.schedule-pin-view-pin-link:hover, .schedule-pin-view-pin-link:focus {
+.scheduled-pin-view-pin-link:hover, .scheduled-pin-view-pin-link:focus {
   color: #333;
   background-color: #e6e6e6;
   border-color: #adadad;
+}
+
+.scheduled-pin-action-placeholder {
+  width: 10%;
 }
