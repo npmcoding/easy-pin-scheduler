@@ -46,14 +46,15 @@ const Home = () => {
 
   const handlePostPin = (data) => {
     postPin(data)
-      .then((response) => {
-        console.log(response);
-        const postedPin = response.Attributes;
-        const newPinList = scheduledPins
-          .filter((pin) => pin.scheduledPinId !== postedPin.scheduledPinId)
-          .concat([postedPin]);
-          
-        setScheduledPins(newPinList)
+      .then((newPin) => {
+        console.log(newPin);
+        if (newPin) {
+          const newPinList = scheduledPins
+            .filter((pin) => pin.scheduledPinId !== newPin.scheduledPinId)
+            .concat([newPin]);
+
+          setScheduledPins(newPinList);
+        }
       })
       .catch((e) => {
         alert(e);
@@ -73,8 +74,8 @@ const Home = () => {
                   <b>{"\uFF0B"}</b> Create a new scheduled pin
                 </>
               ) : (
-                  <>Connect to your Pinterest account to create new pins</>
-                )}
+                <>Connect to your Pinterest account to create new pins</>
+              )}
             </h4>
           </ListGroupItem>
         </LinkContainer>

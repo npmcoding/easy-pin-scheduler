@@ -21,6 +21,7 @@ const ScheduledPinListItem = ({
   handlePostPin,
   pinURL,
   scheduledDate,
+  postedDate
 }) => {
   const onPostPinClick = () => {
     handlePostPin({
@@ -76,15 +77,12 @@ const ScheduledPinListItem = ({
   const StatusMessage = () => {
     switch (scheduledPinStatus) {
       case "posted":
-        return `${statusMessage} on ${new Date(updatedAt).toLocaleString()}`;
+        return `${statusMessage} on ${new Date(postedDate).toLocaleString()}`;
       case "tooManyRequests":
       case "pending":
-        if (!scheduledDate) {
-          return "";
-        }
-        return `${statusMessage} for ${new Date(
+        return `${statusMessage}${scheduledDate ? ` for ${new Date(
           scheduledDate
-        ).toLocaleString()}`;
+        ).toLocaleString()}` : ""}`;
       default:
         return statusMessage || "";
     }

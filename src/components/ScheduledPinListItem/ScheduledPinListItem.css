@@ -69,11 +69,13 @@
   margin-right: 5px;
 }
 
-.scheduled-pin-status-message.error {
+.scheduled-pin-status-message.error,
+.scheduled-pin-status-message.tooManyRequests {
   color: rgb(255, 0, 0);
 }
 
-.scheduled-pin-status-message.error::before {
+.scheduled-pin-status-message.error::before,
+.scheduled-pin-status-message.tooManyRequests::before {
   content: "\26D4";
 }
 
@@ -85,11 +87,13 @@
   content: "\2713";
 }
 
-.scheduled-pin-status-message.pending {
+.scheduled-pin-status-message.pending,
+.scheduled-pin-status-message.rescheduled {
   color: rgb(0, 162, 255);
 }
 
-.scheduled-pin-status-message.pending::before {
+.scheduled-pin-status-message.pending::before,
+.scheduled-pin-status-message.rescheduled::before {
   content: "\231B";
 }
 
