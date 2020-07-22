@@ -44,16 +44,24 @@ const Home = () => {
     ).then((fetchedPins) => setScheduledPins(fetchedPins));
   };
 
+  const updatePin = (newPin) => {
+    Storage.vault
+      .get(newPin.imagePath)
+      .then((imageUrl) =>
+        scheduledPins
+          .filter((pin) => pin.scheduledPinId !== newPin.scheduledPinId)
+          .concat([{ ...newPin, imageUrl }])
+      )
+      .then((newPinList) => setScheduledPins(newPinList))
+      .catch((e) => console.warn(e));
+  };
+
   const handlePostPin = (data) => {
     postPin(data)
       .then((newPin) => {
         console.log(newPin);
         if (newPin) {
-          const newPinList = scheduledPins
-            .filter((pin) => pin.scheduledPinId !== newPin.scheduledPinId)
-            .concat([newPin]);
-
-          setScheduledPins(newPinList);
+          updatePin(newPin);
         }
       })
       .catch((e) => {
