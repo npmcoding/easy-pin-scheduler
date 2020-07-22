@@ -28,7 +28,4 @@ export const deletePin = (imagePath, id) =>
 export const postPin = (scheduledPin) =>
   API.post("scheduledPins", "/postPin", {
     body: scheduledPin,
-  }).catch((e) => {
-    alert("There was a problem when attempting to pin");
-    console.log(e);
-  });
+  })

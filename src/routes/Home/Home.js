@@ -57,8 +57,28 @@ const Home = () => {
         }
       })
       .catch((e) => {
-        alert(e);
-        console.warn(e);
+        const { status, data } = e.response;
+        console.log(status, data);
+
+        const message =
+          status === 429
+            ? `Too many requests to Pinterest. Last request on ${new Date(
+                data.lastRequest
+              ).toLocaleString()}`
+            : data.message;
+
+        switch (status) {
+          case 400:
+            console.warn(e.response.e);
+            break;
+          case 429:
+            console.warn(message);
+            break;
+          default:
+            console.warn(e, e.response);
+        }
+        alert(message);
+        updatePin(data.pin);
       });
   };
 
