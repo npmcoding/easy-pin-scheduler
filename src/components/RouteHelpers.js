@@ -7,7 +7,7 @@ export const AppliedRoute = ({ component: C, ...rest }) => {
     return <Route {...rest} render={props => <C {...props} />} />
 }
 
-export const AuthenticatedRoute = ({ component: C, appProps, location, ...rest }) => {
+export const AuthenticatedRoute = ({ component: C, location, ...rest }) => {
     const [isAuthenticated] = useRecoilState(authenticatedState);
 
     return (

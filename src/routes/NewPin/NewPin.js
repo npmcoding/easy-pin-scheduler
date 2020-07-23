@@ -9,9 +9,10 @@ import {
 } from "react-bootstrap";
 import { createPin } from "../../libs/epsLib";
 import { handleImageUpload } from "../../libs/awsLib";
-import LoaderButton from "../../components/LoaderButton/LoaderButton";
 import { useBoards } from "../../libs/boardsUtil";
 import { getAccessToken } from "../../libs/pinterestLib";
+import LoaderButton from "../../components/LoaderButton/LoaderButton";
+import SchedulePicker from "../../components/SchedulePicker/SchedulePicker";
 import "./NewPin.css";
 
 const NewPin = ({ history }) => {
@@ -21,6 +22,7 @@ const NewPin = ({ history }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [selectedBoard, setSelectedBoard] = useState(null);
   const [imageURL, setImageURL] = useState("");
+  const [selectedDate, handleDateChange] = useState(null);
   const [boards, loadingBoards] = useBoards();
 
   const handleFileChange = async (e) => {
@@ -101,6 +103,15 @@ const NewPin = ({ history }) => {
             </FormControl.Static>
           )}
           <FormControl onChange={handleFileChange} type="file" />
+        </FormGroup>
+        <FormGroup>
+          <ControlLabel>Schedule it</ControlLabel>
+          <div>
+            <SchedulePicker
+              selectedDate={selectedDate}
+              handleDateChange={handleDateChange}
+            />
+          </div>
         </FormGroup>
         <FormGroup className="action-buttons">
           <Button
