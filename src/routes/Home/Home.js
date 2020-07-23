@@ -77,7 +77,7 @@ const Home = () => {
 
         switch (status) {
           case 400:
-            console.warn(e.response.e);
+            console.warn(data.e || message);
             break;
           case 429:
             console.warn(message);
@@ -86,7 +86,9 @@ const Home = () => {
             console.warn(e, e.response);
         }
         alert(message);
-        updatePin(data.pin);
+        if(data.pin) {
+          updatePin(data.pin);
+        }
       });
   };
 
