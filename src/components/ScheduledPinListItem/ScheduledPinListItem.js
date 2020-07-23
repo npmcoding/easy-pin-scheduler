@@ -21,7 +21,7 @@ const ScheduledPinListItem = ({
   handlePostPin,
   pinURL,
   scheduledDate,
-  postedDate
+  postedDate,
 }) => {
   const onPostPinClick = () => {
     handlePostPin({
@@ -32,7 +32,7 @@ const ScheduledPinListItem = ({
       link,
       userId,
       scheduledPinId,
-      shouldReschedule: false
+      shouldReschedule: false,
     });
   };
 
@@ -46,6 +46,7 @@ const ScheduledPinListItem = ({
             </a>
           </div>
         );
+      case "draft": // but only if it's valid
       case "pending":
       case "tooManyRequests":
       case "error":
@@ -80,9 +81,11 @@ const ScheduledPinListItem = ({
         return `${statusMessage} on ${new Date(postedDate).toLocaleString()}`;
       case "tooManyRequests":
       case "pending":
-        return `${statusMessage}${scheduledDate ? ` for ${new Date(
+        return `${statusMessage}${
           scheduledDate
-        ).toLocaleString()}` : ""}`;
+            ? ` for ${new Date(scheduledDate).toLocaleString()}`
+            : ""
+        }`;
       default:
         return statusMessage || "";
     }
@@ -111,7 +114,7 @@ const ScheduledPinListItem = ({
             </div>
           </div>
           {imageUrl && <img className="thumb" src={imageUrl} alt={imagePath} />}
-          {(!scheduledPinStatus || scheduledPinStatus === "draft") && (
+          {!scheduledPinStatus /* || invalid/incomplete */ && (
             <div className="scheduled-pin-action-placeholder" />
           )}
         </div>
