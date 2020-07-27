@@ -86,6 +86,8 @@ const ScheduledPinListItem = ({
             ? ` for ${new Date(scheduledDate).toLocaleString()}`
             : ""
         }`;
+      case "error":
+        return `PIN FAILURE: ${statusMessage}`;
       default:
         return statusMessage || "";
     }
