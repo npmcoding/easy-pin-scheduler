@@ -54,6 +54,7 @@ const NewPin = ({ history }) => {
       link,
       imagePath,
       board: selectedBoard,
+      scheduledDate: selectedDate ? selectedDate.toISOString() : undefined,
     };
     createPin(pin)
       .then(() => history.push("/"))
@@ -66,25 +67,36 @@ const NewPin = ({ history }) => {
   return (
     <div className="newpin">
       <form onSubmit={handleSubmit}>
-        <FormGroup controlId="board">
-          <ControlLabel>Board</ControlLabel>
-          <DropdownButton
-            id="dropdown-basic-button"
-            title={selectedBoard ? selectedBoard.name : "Choose a board"}
-            disabled={loadingBoards}
-          >
-            {boards.map((b) => (
-              <MenuItem
-                key={b.id}
-                as="button"
-                eventKey={b.id}
-                onClick={() => setSelectedBoard(b)}
-              >
-                {b.name}
-              </MenuItem>
-            ))}
-          </DropdownButton>
-        </FormGroup>
+        <div className="first-line">
+          <FormGroup controlId="board">
+            <ControlLabel>Board</ControlLabel>
+            <DropdownButton
+              id="dropdown-basic-button"
+              title={selectedBoard ? selectedBoard.name : "Choose a board"}
+              disabled={loadingBoards}
+            >
+              {boards.map((b) => (
+                <MenuItem
+                  key={b.id}
+                  as="button"
+                  eventKey={b.id}
+                  onClick={() => setSelectedBoard(b)}
+                >
+                  {b.name}
+                </MenuItem>
+              ))}
+            </DropdownButton>
+          </FormGroup>
+          <FormGroup>
+            <ControlLabel>Schedule date</ControlLabel>
+            <div>
+              <SchedulePicker
+                selectedDate={selectedDate}
+                handleDateChange={handleDateChange}
+              />
+            </div>
+          </FormGroup>
+        </div>
         <FormGroup controlId="note">
           <ControlLabel>Description</ControlLabel>
           <FormControl value={note} onChange={(e) => setNote(e.target.value)} />
@@ -103,15 +115,6 @@ const NewPin = ({ history }) => {
             </FormControl.Static>
           )}
           <FormControl onChange={handleFileChange} type="file" />
-        </FormGroup>
-        <FormGroup>
-          <ControlLabel>Schedule it</ControlLabel>
-          <div>
-            <SchedulePicker
-              selectedDate={selectedDate}
-              handleDateChange={handleDateChange}
-            />
-          </div>
         </FormGroup>
         <FormGroup className="action-buttons">
           <Button
