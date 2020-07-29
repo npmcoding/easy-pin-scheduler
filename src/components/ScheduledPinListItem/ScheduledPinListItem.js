@@ -32,7 +32,6 @@ const ScheduledPinListItem = ({
       link,
       userId,
       scheduledPinId,
-      shouldReschedule: false,
     });
   };
 

@@ -87,13 +87,11 @@
   content: "\2713";
 }
 
-.scheduled-pin-status-message.pending,
-.scheduled-pin-status-message.rescheduled {
+.scheduled-pin-status-message.pending {
   color: rgb(0, 162, 255);
 }
 
-.scheduled-pin-status-message.pending::before,
-.scheduled-pin-status-message.rescheduled::before {
+.scheduled-pin-status-message.pending::before {
   content: "\231B";
 }
 
