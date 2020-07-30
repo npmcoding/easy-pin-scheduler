@@ -17,8 +17,10 @@ export const savePin = (pin, id) =>
     console.log(e);
   });
 
-export const deletePin = (imagePath, id) =>
-  API.del("scheduledPins", `/scheduledPins/${id}`)
+export const deletePin = (imagePath, id, eventRuleName = "") =>
+  API.del("scheduledPins", `/scheduledPins/${id}`, {
+    body: { eventRuleName },
+  })
     .then(() => s3Remove(imagePath))
     .catch((e) => {
       alert("Delete unsuccessful");
@@ -28,4 +30,4 @@ export const deletePin = (imagePath, id) =>
 export const postPin = (scheduledPin) =>
   API.post("scheduledPins", "/postPin", {
     body: scheduledPin,
-  })
+  });

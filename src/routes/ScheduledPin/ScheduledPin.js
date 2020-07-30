@@ -19,34 +19,31 @@ const ScheduledPin = ({ match, history }) => {
     const loadPin = () =>
       API.get("scheduledPins", `/scheduledPins/${match.params.id}`);
 
-    const onLoad = async () => {
-      try {
-        const initialPin = await loadPin();
-        if (initialPin.imagePath) {
-          setImagePath(initialPin.imagePath);
-          setImageURL(await Storage.vault.get(initialPin.imagePath));
-        }
-
+    loadPin()
+      .then((initialPin) => {
         setNote(initialPin.note || "");
         setLink(initialPin.link || "");
         setPin(initialPin);
-      } catch (e) {
-        alert(e);
-      }
-    };
 
-    onLoad();
+        if (initialPin.imagePath) {
+          setImagePath(initialPin.imagePath);
+          Storage.vault
+            .get(initialPin.imagePath)
+            .then((fetchedimageURL) => setImageURL(fetchedimageURL));
+        }
+      })
+      .catch((e) => alert(e));
   }, [match.params.id]);
 
-  const handleFileChange = async (e) => {
+  const handleFileChange = (e) => {
     e.preventDefault();
     const currentFile = e.target.files[0];
-    const { newImagePath, newImageURL } = await handleImageUpload(
-      currentFile,
-      imagePath
+    handleImageUpload(currentFile, imagePath).then(
+      ({ newImagePath, newImageURL }) => {
+        setImagePath(newImagePath);
+        setImageURL(newImageURL || imageURL);
+      }
     );
-    setImagePath(newImagePath);
-    setImageURL(newImageURL || imageURL);
   };
 
   const handleSubmit = (e) => {
@@ -79,7 +76,7 @@ const ScheduledPin = ({ match, history }) => {
 
     setIsDeleting(true);
 
-    deletePin(imagePath, match.params.id)
+    deletePin(imagePath, match.params.id, pin.eventRuleName)
       .then(() => history.push("/"))
       .catch((e) => {
         console.log(e);
