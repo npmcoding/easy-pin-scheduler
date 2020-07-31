@@ -5,15 +5,11 @@ import { Button } from "react-bootstrap";
 import "./ScheduledPinListItem.css";
 
 const ScheduledPinListItem = ({
-  accessToken,
   scheduledPinId,
   createdAt,
-  link,
-  board,
   note,
   imagePath,
   imageUrl,
-  awsKey,
   userId,
   updatedAt,
   scheduledPinStatus,
@@ -25,11 +21,6 @@ const ScheduledPinListItem = ({
 }) => {
   const onPostPinClick = () => {
     handlePostPin({
-      accessToken,
-      awsKey,
-      board,
-      note,
-      link,
       userId,
       scheduledPinId,
     });
