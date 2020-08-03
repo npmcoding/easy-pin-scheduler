@@ -68,19 +68,41 @@ const ScheduledPinListItem = ({
   const StatusMessage = () => {
     switch (scheduledPinStatus) {
       case "posted":
-        return `${statusMessage} on ${new Date(postedDate).toLocaleString()}`;
-      case "tooManyRequests":
+        return (
+          <div className="scheduled-pin-status-message posted">
+            `${statusMessage} on ${new Date(postedDate).toLocaleString()}`;
+          </div>
+        );
       case "pending":
-        return `${statusMessage}${
-          scheduledDate
-            ? ` for ${new Date(scheduledDate).toLocaleString()}`
-            : ""
-        }`;
+        return <ScheduledDateMessage />;
       case "error":
-        return `PIN FAILURE: ${statusMessage}`;
+      case "tooManyRequests":
+        return (
+          <>
+            <div className="scheduled-pin-status-message error">
+              {statusMessage}
+            </div>
+            <ScheduledDateMessage />
+          </>
+        );
       default:
-        return statusMessage || "";
+        return null;
     }
+  };
+
+  const ScheduledDateMessage = () => {
+    console.log(new Date(scheduledDate));
+    console.log(new Date(Date.now()));
+    console.log(new Date(scheduledDate) > new Date(Date.now()));
+
+    if (scheduledDate && new Date(scheduledDate) > new Date(Date.now())) {
+      return (
+        <div className="scheduled-pin-status-message pending">
+          Scheduled for {new Date(scheduledDate).toLocaleString()}
+        </div>
+      );
+    }
+    return null;
   };
 
   return (
@@ -90,11 +112,7 @@ const ScheduledPinListItem = ({
           <div className="scheduled-pin-body">
             <h4 className="scheduled-pin-header">{note || "{ No title }"}</h4>
             <div className="scheduled-pin-messages">
-              <div
-                className={`scheduled-pin-status-message ${scheduledPinStatus}`}
-              >
-                <StatusMessage />
-              </div>
+              <StatusMessage />
               <div className="scheduled-pin-createdAt">
                 {`Created: ${new Date(createdAt).toLocaleString()}`}
               </div>
