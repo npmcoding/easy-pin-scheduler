@@ -80,7 +80,7 @@ const ScheduledPinListItem = ({
         return (
           <>
             <div className="scheduled-pin-status-message error">
-              {statusMessage}
+              Error: {statusMessage}
             </div>
             <ScheduledDateMessage />
           </>
