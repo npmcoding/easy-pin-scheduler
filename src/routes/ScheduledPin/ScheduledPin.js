@@ -16,10 +16,7 @@ const ScheduledPin = ({ match, history }) => {
   const [isDeleting, setIsDeleting] = useState(false);
 
   useEffect(() => {
-    const loadPin = () =>
-      API.get("scheduledPins", `/scheduledPins/${match.params.id}`);
-
-    loadPin()
+    API.get("scheduledPins", `/scheduledPins/${match.params.id}`)
       .then((initialPin) => {
         setNote(initialPin.note || "");
         setLink(initialPin.link || "");
@@ -32,7 +29,10 @@ const ScheduledPin = ({ match, history }) => {
             .then((fetchedimageURL) => setImageURL(fetchedimageURL));
         }
       })
-      .catch((e) => alert(e));
+      .catch((e) => {
+        alert("There was a problem loading pin");
+        console.error(e);
+      });
   }, [match.params.id]);
 
   const handleFileChange = (e) => {
@@ -60,7 +60,8 @@ const ScheduledPin = ({ match, history }) => {
     savePin(updatedPin, match.params.id)
       .then(() => history.push("/"))
       .catch((e) => {
-        alert(e);
+        alert('There was a problem while saving pin');
+        console.error(e);
         setIsLoading(false);
       });
   };

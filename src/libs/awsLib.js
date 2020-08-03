@@ -56,7 +56,10 @@ export const s3Upload = (file) => {
       },
     })
     .then((stored) => stored.key)
-    .catch((e) => alert(e));
+    .catch((e) => {
+      alert("Error uploading image");
+      console.error(e);
+    });
 };
 
 export const s3Remove = (key) => {

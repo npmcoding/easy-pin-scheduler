@@ -36,7 +36,8 @@ const App = () => {
           pinterestLogout();
         }
         if (e !== "No current user") {
-          alert(e);
+          // alert(e);
+          console.error(e);
         }
         setIsAuthenticating(false);
       });
