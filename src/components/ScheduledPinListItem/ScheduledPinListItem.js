@@ -91,10 +91,6 @@ const ScheduledPinListItem = ({
   };
 
   const ScheduledDateMessage = () => {
-    console.log(new Date(scheduledDate));
-    console.log(new Date(Date.now()));
-    console.log(new Date(scheduledDate) > new Date(Date.now()));
-
     if (scheduledDate && new Date(scheduledDate) > new Date(Date.now())) {
       return (
         <div className="scheduled-pin-status-message pending">
