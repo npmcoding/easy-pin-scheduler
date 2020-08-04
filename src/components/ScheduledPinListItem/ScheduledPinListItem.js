@@ -70,7 +70,7 @@ const ScheduledPinListItem = ({
       case "posted":
         return (
           <div className="scheduled-pin-status-message posted">
-            `${statusMessage} on ${new Date(postedDate).toLocaleString()}`;
+            Posted on {new Date(postedDate).toLocaleString()}
           </div>
         );
       case "pending":
