@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from "react";
 import { API, Storage } from "aws-amplify";
-import { FormGroup, FormControl, ControlLabel, Button } from "react-bootstrap";
-import LoaderButton from "../../components/LoaderButton/LoaderButton";
 import { savePin, deletePin } from "../../libs/epsLib";
 import { handleImageUpload } from "../../libs/awsLib";
+import { FormGroup, FormControl, ControlLabel, Button } from "react-bootstrap";
+import LoaderButton from "../../components/LoaderButton/LoaderButton";
+import SchedulePicker from "../../components/SchedulePicker/SchedulePicker";
 import "./ScheduledPin.css";
 
 const ScheduledPin = ({ match, history }) => {
@@ -12,6 +13,7 @@ const ScheduledPin = ({ match, history }) => {
   const [link, setLink] = useState("");
   const [imagePath, setImagePath] = useState("");
   const [imageURL, setImageURL] = useState("");
+  const [selectedDate, handleDateChange] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
 
@@ -20,6 +22,7 @@ const ScheduledPin = ({ match, history }) => {
       .then((initialPin) => {
         setNote(initialPin.note || "");
         setLink(initialPin.link || "");
+        handleDateChange(initialPin.scheduledDate || null)
         setPin(initialPin);
 
         if (initialPin.imagePath) {
@@ -55,6 +58,7 @@ const ScheduledPin = ({ match, history }) => {
       note,
       link,
       imagePath,
+      scheduledDate: selectedDate ? selectedDate.toISOString() : undefined,
     };
 
     savePin(updatedPin, match.params.id)
@@ -117,6 +121,15 @@ const ScheduledPin = ({ match, history }) => {
               </FormControl.Static>
             )}
             <FormControl onChange={handleFileChange} type="file" />
+          </FormGroup>
+          <FormGroup>
+            <ControlLabel>Schedule date</ControlLabel>
+            <div>
+              <SchedulePicker
+                selectedDate={selectedDate}
+                handleDateChange={handleDateChange}
+              />
+            </div>
           </FormGroup>
           <FormGroup className="action-buttons">
             <LoaderButton
