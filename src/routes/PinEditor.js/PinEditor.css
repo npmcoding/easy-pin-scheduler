@@ -1,0 +1,38 @@
+.pin-editor form {
+  padding-bottom: 15px;
+}
+
+.pin-editor .first-line{
+  display: flex;
+  justify-content: space-around;
+  flex-direction: row;
+}
+
+.pin-editor form textarea {
+  height: 150px;
+  font-size: 24px;
+}
+
+.pin-editor label[for="board"] {
+  display: block;
+}
+
+.pin-editor .action-buttons {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.pin-editor .cancel-button {
+  margin: 0 20px;
+}
+
+.pin-editor .thumb {
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  padding: 5px;
+  width: 150px;
+}
+
+.pin-editor .thumb:hover {
+  box-shadow: 0 0 2px 1px rgba(0, 140, 186, 0.5);
+}
