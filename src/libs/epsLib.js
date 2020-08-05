@@ -17,11 +17,11 @@ export const savePin = (pin, id) =>
     console.log(e);
   });
 
-export const deletePin = (imagePath, id, eventRuleName = "") =>
+export const deletePin = (uploadedImageName, id, eventRuleName = "") =>
   API.del("scheduledPins", `/scheduledPins/${id}`, {
     body: { eventRuleName },
   })
-    .then(() => s3Remove(imagePath))
+    .then(() => s3Remove(uploadedImageName))
     .catch((e) => {
       alert("Delete unsuccessful");
       console.log(e);

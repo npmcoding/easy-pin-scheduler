@@ -66,28 +66,23 @@ export const s3Remove = (key) => {
   Storage.vault.remove(key, { level: "private" }).catch((e) => console.log(e));
 };
 
-export const handleImageUpload = async (currentFile, existingImagePath) => {
+export const handleImageUpload = async (currentFile, existingImage) => {
   if (currentFile && currentFile.size > MAX_ATTACHMENT_SIZE) {
     alert(
       `Please pick a file smaller than ${MAX_ATTACHMENT_SIZE / 1000000} MB.`
     );
     return {
-      newImagePath: existingImagePath,
+      newImage: existingImage,
       newImageURL: null,
     };
   }
-  if (existingImagePath) {
-    await s3Remove(existingImagePath);
+  if (existingImage) {
+    await s3Remove(existingImage);
   }
-  const newImagePath = await s3Upload(currentFile);
-  const newImageURL = newImagePath
-    ? await Storage.vault.get(newImagePath)
-    : null;
+  const newImage = await s3Upload(currentFile);
+  const newImageURL = newImage ? await Storage.vault.get(newImage) : null;
 
-  return {
-    newImagePath,
-    newImageURL,
-  };
+  return [newImage, newImageURL];
 };
 
 export const createShortURL = async (awsKey) => {

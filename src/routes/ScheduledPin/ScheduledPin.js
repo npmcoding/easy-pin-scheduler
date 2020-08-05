@@ -11,8 +11,8 @@ const ScheduledPin = ({ match, history }) => {
   const [pin, setPin] = useState(null);
   const [note, setNote] = useState("");
   const [link, setLink] = useState("");
-  const [imagePath, setImagePath] = useState("");
-  const [imageURL, setImageURL] = useState("");
+  const [uploadedImageName, setUploadedImageName] = useState("");
+  const [uploadedImageURL, setUploadedImageURL] = useState("");
   const [selectedDate, handleDateChange] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
@@ -25,11 +25,11 @@ const ScheduledPin = ({ match, history }) => {
         handleDateChange(initialPin.scheduledDate || null)
         setPin(initialPin);
 
-        if (initialPin.imagePath) {
-          setImagePath(initialPin.imagePath);
+        if (initialPin.uploadedImageName) {
+          setUploadedImageName(initialPin.uploadedImageName);
           Storage.vault
-            .get(initialPin.imagePath)
-            .then((fetchedimageURL) => setImageURL(fetchedimageURL));
+            .get(initialPin.uploadedImageName)
+            .then(setUploadedImageURL);
         }
       })
       .catch((e) => {
@@ -41,10 +41,10 @@ const ScheduledPin = ({ match, history }) => {
   const handleFileChange = (e) => {
     e.preventDefault();
     const currentFile = e.target.files[0];
-    handleImageUpload(currentFile, imagePath).then(
-      ({ newImagePath, newImageURL }) => {
-        setImagePath(newImagePath);
-        setImageURL(newImageURL || imageURL);
+    handleImageUpload(currentFile, uploadedImageName).then(
+      ([ newUploadedImageName, newUploadedImageURL ]) => {
+        setUploadedImageName(newUploadedImageName);
+        setUploadedImageURL(newUploadedImageURL || uploadedImageURL);
       }
     );
   };
@@ -57,7 +57,7 @@ const ScheduledPin = ({ match, history }) => {
       ...pin,
       note,
       link,
-      imagePath,
+      uploadedImageName,
       scheduledDate: selectedDate ? selectedDate.toISOString() : undefined,
     };
 
@@ -81,7 +81,7 @@ const ScheduledPin = ({ match, history }) => {
 
     setIsDeleting(true);
 
-    deletePin(imagePath, match.params.id, pin.eventRuleName)
+    deletePin(uploadedImageName, match.params.id, pin.eventRuleName)
       .then(() => history.push("/"))
       .catch((e) => {
         console.log(e);
@@ -113,10 +113,10 @@ const ScheduledPin = ({ match, history }) => {
           </FormGroup>
           <FormGroup>
             <ControlLabel>Image</ControlLabel>
-            {imageURL && (
+            {uploadedImageURL && (
               <FormControl.Static>
-                <a target="_blank" rel="noopener noreferrer" href={imageURL}>
-                  <img className="thumb" src={imageURL} alt={imagePath} />
+                <a target="_blank" rel="noopener noreferrer" href={uploadedImageURL}>
+                  <img className="thumb" src={uploadedImageURL} alt={uploadedImageName} />
                 </a>
               </FormControl.Static>
             )}

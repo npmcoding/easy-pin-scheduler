@@ -18,24 +18,22 @@ import "./NewPin.css";
 const NewPin = ({ history }) => {
   const [note, setNote] = useState("");
   const [link, setLink] = useState("");
-  const [imagePath, setImagePath] = useState("");
+  const [uploadedImageName, setUploadedImageName] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [selectedBoard, setSelectedBoard] = useState(null);
-  const [imageURL, setImageURL] = useState("");
+  const [uploadedImageURL, setUploadedImageURL] = useState("");
   const [selectedDate, handleDateChange] = useState(null);
   const [boards, loadingBoards] = useBoards();
 
-  const handleFileChange = async (e) => {
+  const handleFileChange = (e) => {
     e.preventDefault();
     const currentFile = e.target.files[0];
-    if (currentFile) {
-      const { newImagePath, newImageURL } = await handleImageUpload(
-        currentFile,
-        imagePath
-      );
-      setImagePath(newImagePath);
-      setImageURL(newImageURL || imageURL);
-    }
+    handleImageUpload(currentFile, uploadedImageName).then(
+      ([ newUploadedImageName, newUploadedImageURL ]) => {
+        setUploadedImageName(newUploadedImageName);
+        setUploadedImageURL(newUploadedImageURL || uploadedImageURL);
+      }
+    );
   };
 
   const handleSubmit = (e) => {
@@ -52,7 +50,7 @@ const NewPin = ({ history }) => {
       accessToken: getAccessToken(),
       note,
       link,
-      imagePath,
+      uploadedImageName,
       board: selectedBoard,
       scheduledDate: selectedDate ? selectedDate.toISOString() : undefined,
     };
@@ -107,10 +105,18 @@ const NewPin = ({ history }) => {
         </FormGroup>
         <FormGroup>
           <ControlLabel>Image</ControlLabel>
-          {imageURL && (
+          {uploadedImageURL && (
             <FormControl.Static>
-              <a target="_blank" rel="noopener noreferrer" href={imageURL}>
-                <img className="thumb" src={imageURL} alt={imagePath} />
+              <a
+                target="_blank"
+                rel="noopener noreferrer"
+                href={uploadedImageURL}
+              >
+                <img
+                  className="thumb"
+                  src={uploadedImageURL}
+                  alt={uploadedImageName}
+                />
               </a>
             </FormControl.Static>
           )}

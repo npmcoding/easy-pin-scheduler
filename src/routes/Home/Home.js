@@ -31,26 +31,28 @@ const Home = () => {
   const fetchThumbnails = (pins) => {
     Promise.all(
       pins.map((pin) => {
-        if (!pin.imagePath) {
+        if (!pin.uploadedImageName) {
           return pin;
         }
-        return Storage.vault.get(pin.imagePath).then((imageUrl) => {
-          return {
-            ...pin,
-            imageUrl,
-          };
-        });
+        return Storage.vault
+          .get(pin.uploadedImageName)
+          .then((uploadedImageURL) => {
+            return {
+              ...pin,
+              uploadedImageURL,
+            };
+          });
       })
     ).then((fetchedPins) => setScheduledPins(fetchedPins));
   };
 
   const updatePin = (newPin) => {
     Storage.vault
-      .get(newPin.imagePath)
-      .then((imageUrl) =>
+      .get(newPin.uploadedImageName)
+      .then((uploadedImageURL) =>
         scheduledPins
           .filter((pin) => pin.scheduledPinId !== newPin.scheduledPinId)
-          .concat([{ ...newPin, imageUrl }])
+          .concat([{ ...newPin, uploadedImageURL }])
       )
       .then((newPinList) => setScheduledPins(newPinList))
       .catch((e) => console.warn(e));
@@ -86,7 +88,7 @@ const Home = () => {
             console.warn(e, e.response);
         }
         alert(message);
-        if(data.pin) {
+        if (data.pin) {
           updatePin(data.pin);
         }
       });
@@ -109,9 +111,13 @@ const Home = () => {
             </h4>
           </ListGroupItem>
         </LinkContainer>
-        {scheduledPins.map((pin) =>
-          ScheduledPinListItem({ ...pin, handlePostPin })
-        )}
+        {scheduledPins.map((pin) => (
+          <ScheduledPinListItem
+            key={pin.scheduledPinId}
+            {...pin}
+            handlePostPin={handlePostPin}
+          />
+        ))}
       </>
     );
   };

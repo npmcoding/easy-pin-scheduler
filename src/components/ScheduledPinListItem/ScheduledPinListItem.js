@@ -8,8 +8,8 @@ const ScheduledPinListItem = ({
   scheduledPinId,
   createdAt,
   note,
-  imagePath,
-  imageUrl,
+  uploadedImageName,
+  uploadedImageURL,
   userId,
   updatedAt,
   scheduledPinStatus,
@@ -119,7 +119,7 @@ const ScheduledPinListItem = ({
               )}
             </div>
           </div>
-          {imageUrl && <img className="thumb" src={imageUrl} alt={imagePath} />}
+          {uploadedImageURL && <img className="thumb" src={uploadedImageURL} alt={uploadedImageName} />}
           {!scheduledPinStatus /* || invalid/incomplete */ && (
             <div className="scheduled-pin-action-placeholder" />
           )}
