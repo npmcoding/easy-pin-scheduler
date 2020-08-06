@@ -98,7 +98,7 @@ const Home = () => {
     // console.log({ scheduledPins });
     return (
       <>
-        <LinkContainer key="new" to={isConnected ? "/pins/new" : "/profile"}>
+        <LinkContainer key="new" to={isConnected ? "/pin-editor" : "/profile"}>
           <ListGroupItem>
             <h4>
               {isConnected ? (

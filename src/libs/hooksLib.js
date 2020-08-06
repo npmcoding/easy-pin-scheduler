@@ -21,7 +21,7 @@ export const usePinFields = () => {
     uploadedImageName: "",
     board: null,
     imageURL: "",
-    scheduleDate: null,
+    scheduledDate: null,
   };
 
   const [fields, setValues] = useState(initialState);

@@ -57,7 +57,7 @@ const ScheduledPinListItem = ({
     scheduledPinStatus !== "posted" ? (
       <Link
         className="scheduled-pin-edit-link"
-        to={`/scheduledPins/${scheduledPinId}`}
+        to={`/pin-editor/${scheduledPinId}`}
       >
         {children}
       </Link>
