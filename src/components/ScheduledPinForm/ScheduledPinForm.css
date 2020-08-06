@@ -2,12 +2,6 @@
   padding-bottom: 15px;
 }
 
-.pin-editor .first-line{
-  display: flex;
-  justify-content: space-around;
-  flex-direction: row;
-}
-
 .pin-editor form textarea {
   height: 150px;
   font-size: 24px;

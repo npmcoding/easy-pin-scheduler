@@ -10,11 +10,16 @@ import {
 import { handleImageUpload } from "../../libs/awsLib";
 import { useBoards } from "../../libs/boardsUtil";
 import LoaderButton from "../LoaderButton/LoaderButton";
-import SchedulePickerModal from "../SchedulePickerModal/SchedulePickerModal";
+import SchedulePicker from "../SchedulePicker/SchedulePicker";
 import "./ScheduledPinForm.css";
 
-const ScheduledPinForm = ({ history, pin, updateFields, submitAction, DeleteButton = null }) => {
-  
+const ScheduledPinForm = ({
+  history,
+  pin,
+  updateFields,
+  submitAction,
+  DeleteButton = null,
+}) => {
   const {
     scheduledPinId,
     note,
@@ -26,9 +31,8 @@ const ScheduledPinForm = ({ history, pin, updateFields, submitAction, DeleteButt
   } = pin;
 
   const [isLoading, setIsLoading] = useState(false);
-  
+
   const [boards, loadingBoards] = useBoards();
-  const [modalShow, setModalShow] = useState(false);
 
   const handleFileChange = (e) => {
     e.preventDefault();
@@ -44,7 +48,7 @@ const ScheduledPinForm = ({ history, pin, updateFields, submitAction, DeleteButt
 
   const handleDateChange = (newDate) => {
     updateFields({
-      scheduledDate: newDate
+      scheduledDate: newDate,
     });
   };
 
@@ -76,120 +80,104 @@ const ScheduledPinForm = ({ history, pin, updateFields, submitAction, DeleteButt
   };
 
   return (
-      <form className="pin-editor" onSubmit={handleSubmit}>
-        <div className="first-line">
-          <FormGroup controlId="board">
-            <ControlLabel>Board</ControlLabel>
-            {scheduledPinId ? (
-              <FormControl readOnly defaultValue={board.name} />
-            ) : (
-              <DropdownButton
-                id="dropdown-basic-button"
-                title={board ? board.name : "Choose a board"}
-                disabled={loadingBoards}
+    <form className="pin-editor" onSubmit={handleSubmit}>
+      <FormGroup controlId="board">
+        <ControlLabel>Board</ControlLabel>
+        {scheduledPinId ? (
+          <FormControl readOnly defaultValue={board.name} />
+        ) : (
+          <DropdownButton
+            id="dropdown-basic-button"
+            title={board ? board.name : "Choose a board"}
+            disabled={loadingBoards}
+          >
+            {boards.map((b) => (
+              <MenuItem
+                key={b.id}
+                as="button"
+                eventKey={b.id}
+                onClick={() => updateFields({ board: b })}
               >
-                {boards.map((b) => (
-                  <MenuItem
-                    key={b.id}
-                    as="button"
-                    eventKey={b.id}
-                    onClick={() => updateFields({ board: b })}
-                  >
-                    {b.name}
-                  </MenuItem>
-                ))}
-              </DropdownButton>
-            )}
-          </FormGroup>
-        </div>
-        <FormGroup controlId="note">
-          <ControlLabel>Description</ControlLabel>
-          <FormControl
-            value={note}
-            onChange={({ target: { value } }) => updateFields({ note: value })}
-          />
-        </FormGroup>
-        <FormGroup controlId="link">
-          <ControlLabel>Link URL</ControlLabel>
-          <FormControl
-            value={link}
-            onChange={({ target: { value } }) => updateFields({ link: value })}
-          />
-        </FormGroup>
-        <FormGroup>
-          <ControlLabel>Image</ControlLabel>
-          {imageURL && (
-            <FormControl.Static>
-              <a target="_blank" rel="noopener noreferrer" href={imageURL}>
-                <img className="thumb" src={imageURL} alt={uploadedImageName} />
-              </a>
-            </FormControl.Static>
-          )}
-          <FormControl onChange={handleFileChange} type="file" />
-        </FormGroup>
-        <FormGroup>
+                {b.name}
+              </MenuItem>
+            ))}
+          </DropdownButton>
+        )}
+      </FormGroup>
+      <FormGroup controlId="note">
+        <ControlLabel>Description</ControlLabel>
+        <FormControl
+          value={note}
+          onChange={({ target: { value } }) => updateFields({ note: value })}
+        />
+      </FormGroup>
+      <FormGroup controlId="link">
+        <ControlLabel>Link URL</ControlLabel>
+        <FormControl
+          value={link}
+          onChange={({ target: { value } }) => updateFields({ link: value })}
+        />
+      </FormGroup>
+      <FormGroup>
+        <ControlLabel>Image</ControlLabel>
+        {imageURL && (
+          <FormControl.Static>
+            <a target="_blank" rel="noopener noreferrer" href={imageURL}>
+              <img className="thumb" src={imageURL} alt={uploadedImageName} />
+            </a>
+          </FormControl.Static>
+        )}
+        <FormControl onChange={handleFileChange} type="file" />
+      </FormGroup>
+      <FormGroup>
+        <SchedulePicker
+          scheduledDate={scheduledDate}
+          handleDateChange={handleDateChange}
+        />
+        {/* <div className="schedule">
           <ControlLabel>Schedule date</ControlLabel>
-          {/* Wrap picker in Modal and display date as readonly */}
-          <>
-            {scheduledDate && (
-              <>
-                <FormControl readOnly defaultValue={scheduledDate} />
-                <Button className="unschedule-button" onClick={() => {}}>
-                  Cancel Schedule
-                </Button>
-              </>
-            )}
+          <SchedulePicker
+            readonly={scheduleIsReadonly}
+            selectedDate={scheduledDate}
+            handleDateChange={handleDateChange}
+          />
+          {scheduledDate && (
+            <>
+              <FormControl readOnly defaultValue={scheduledDate} />
+              <Button className="unschedule-button" onClick={() => {}}>
+                Cancel Schedule
+              </Button>
+            </>
+          )}
+          {scheduleIsReadonly && (
             <Button
               className="schedule-button"
-              onClick={() => setModalShow(true)}
+              onClick={() => setScheduleIsReadonly(false)}
             >
-              {scheduledDate ? "Reschedule" : "Schedule"} it!
+              Reschedule it!
             </Button>
-          </>
-        </FormGroup>
-        <FormGroup className="action-buttons">
-          {DeleteButton && <DeleteButton />}
-          <Button
-            className="cancel-button"
-            bsSize="large"
-            onClick={() => history.goBack()}
-          >
-            Cancel
-          </Button>
-          <LoaderButton
-            type="submit"
-            bsSize="large"
-            bsStyle="primary"
-            isLoading={isLoading}
-          >
-            Save
-          </LoaderButton>
-        </FormGroup>
-
-        <SchedulePickerModal
-          showModal={modalShow}
-          onHide={() => setModalShow(false)}
-          selectedDate={scheduledDate}
-          handleDateChange={handleDateChange}
-          >
-          <Button
-            className="cancel-button"
-            bsSize="large"
-            onClick={() =>  setModalShow(false)}
-          >
-            Cancel
-          </Button>
-          <LoaderButton
-            type="submit"
-            bsSize="large"
-            bsStyle="primary"
-            isLoading={isLoading}
-            onClick={handleSubmit}
-          >
-            Save
-          </LoaderButton>
-          </SchedulePickerModal>
-      </form>
+          )}
+        </div> */}
+      </FormGroup>
+      <FormGroup className="action-buttons">
+        {DeleteButton && <DeleteButton />}
+        <Button
+          className="cancel-button"
+          bsSize="large"
+          onClick={() => history.goBack()}
+        >
+          Cancel
+        </Button>
+        <LoaderButton
+          type="submit"
+          bsSize="large"
+          bsStyle="primary"
+          isLoading={isLoading}
+        >
+          Save
+        </LoaderButton>
+      </FormGroup>
+    </form>
   );
 };
 

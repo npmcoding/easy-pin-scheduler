@@ -1,11 +1,12 @@
-import React from "react";
+import React, { useState } from "react";
+import { ControlLabel, Button } from "react-bootstrap";
 import { MuiPickersUtilsProvider, DateTimePicker } from "@material-ui/pickers";
 import { createMuiTheme } from "@material-ui/core";
 import { ThemeProvider } from "@material-ui/core/styles";
 import MomentUtils from "@date-io/moment";
 import "./SchedulePicker.css";
 
-const SchedulePicker = ({ selectedDate, handleDateChange }) => {
+const SchedulePicker = ({ scheduledDate, handleDateChange }) => {
   const customTheme = createMuiTheme({
     overrides: {
       MuiSvgIcon: {
@@ -62,17 +63,38 @@ const SchedulePicker = ({ selectedDate, handleDateChange }) => {
       },
     },
   });
+
+  const [scheduleIsReadonly, setScheduleIsReadonly] = useState(!!scheduledDate);
+
   return (
     <ThemeProvider theme={customTheme}>
       <MuiPickersUtilsProvider utils={MomentUtils}>
-        <DateTimePicker
-          clearable
-          className="date-time-picker"
-          variant="dialog"
-          value={selectedDate}
-          minDate={new Date(Date.now())}
-          onChange={handleDateChange}
-        />
+        <div className="schedule">
+          <ControlLabel>Schedule date</ControlLabel>
+          <DateTimePicker
+            readOnly={scheduleIsReadonly}
+            clearable
+            className="date-time-picker"
+            variant="dialog"
+            value={scheduledDate}
+            disablePast
+            onChange={handleDateChange}
+          />
+          {scheduleIsReadonly && (
+            <div className="schedule-action-buttons">
+              <Button className="unschedule-button" onClick={() => handleDateChange(null)}>
+                Cancel Schedule
+              </Button>
+
+              <Button
+                className="schedule-button"
+                onClick={() => setScheduleIsReadonly(false)}
+              >
+                Reschedule it!
+              </Button>
+            </div>
+          )}
+        </div>
       </MuiPickersUtilsProvider>
     </ThemeProvider>
   );
