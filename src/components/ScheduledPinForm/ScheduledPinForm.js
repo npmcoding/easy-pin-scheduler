@@ -65,6 +65,7 @@ const ScheduledPinForm = ({
 
     const submittedPin = {
       ...pin,
+      imageURL: pin.uploadedImageName ? undefined : pin.imageURL,
       scheduledDate: pin.scheduledDate
         ? pin.scheduledDate.toISOString()
         : undefined,
