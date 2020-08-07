@@ -4,7 +4,3 @@
     flex-direction: column;
     width: 40%
   }
-
-  .schedule .schedule-action-buttons {
-    display: flex;
-  }

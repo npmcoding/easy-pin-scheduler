@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import { ControlLabel, Button } from "react-bootstrap";
 import { MuiPickersUtilsProvider, DateTimePicker } from "@material-ui/pickers";
 import { createMuiTheme } from "@material-ui/core";
@@ -64,15 +64,12 @@ const SchedulePicker = ({ scheduledDate, handleDateChange }) => {
     },
   });
 
-  const [scheduleIsReadonly, setScheduleIsReadonly] = useState(!!scheduledDate);
-
   return (
     <ThemeProvider theme={customTheme}>
       <MuiPickersUtilsProvider utils={MomentUtils}>
         <div className="schedule">
           <ControlLabel>Schedule date</ControlLabel>
           <DateTimePicker
-            readOnly={scheduleIsReadonly}
             clearable
             className="date-time-picker"
             variant="dialog"
@@ -80,19 +77,13 @@ const SchedulePicker = ({ scheduledDate, handleDateChange }) => {
             disablePast
             onChange={handleDateChange}
           />
-          {scheduleIsReadonly && (
-            <div className="schedule-action-buttons">
-              <Button className="unschedule-button" onClick={() => handleDateChange(null)}>
-                Cancel Schedule
-              </Button>
-
-              <Button
-                className="schedule-button"
-                onClick={() => setScheduleIsReadonly(false)}
-              >
-                Reschedule it!
-              </Button>
-            </div>
+          {scheduledDate && (
+            <Button
+              className="unschedule-button"
+              onClick={() => handleDateChange(null)}
+            >
+              Cancel Schedule
+            </Button>
           )}
         </div>
       </MuiPickersUtilsProvider>
