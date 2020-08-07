@@ -21,7 +21,6 @@ const ScheduledPinForm = ({
   DeleteButton = null,
 }) => {
   const {
-    scheduledPinId,
     note,
     link,
     uploadedImageName,
@@ -84,26 +83,22 @@ const ScheduledPinForm = ({
     <form className="pin-editor" onSubmit={handleSubmit}>
       <FormGroup controlId="board">
         <ControlLabel>Board</ControlLabel>
-        {scheduledPinId ? (
-          <FormControl readOnly defaultValue={board.name} />
-        ) : (
-          <DropdownButton
-            id="dropdown-basic-button"
-            title={board ? board.name : "Choose a board"}
-            disabled={loadingBoards}
-          >
-            {boards.map((b) => (
-              <MenuItem
-                key={b.id}
-                as="button"
-                eventKey={b.id}
-                onClick={() => updateFields({ board: b })}
-              >
-                {b.name}
-              </MenuItem>
-            ))}
-          </DropdownButton>
-        )}
+        <DropdownButton
+          id="dropdown-basic-button"
+          title={board ? board.name : "Choose a board"}
+          disabled={loadingBoards}
+        >
+          {boards.map((b) => (
+            <MenuItem
+              key={b.id}
+              as="button"
+              eventKey={b.id}
+              onClick={() => updateFields({ board: b })}
+            >
+              {b.name}
+            </MenuItem>
+          ))}
+        </DropdownButton>
       </FormGroup>
       <FormGroup controlId="note">
         <ControlLabel>Description</ControlLabel>
@@ -135,30 +130,6 @@ const ScheduledPinForm = ({
           scheduledDate={scheduledDate}
           handleDateChange={handleDateChange}
         />
-        {/* <div className="schedule">
-          <ControlLabel>Schedule date</ControlLabel>
-          <SchedulePicker
-            readonly={scheduleIsReadonly}
-            selectedDate={scheduledDate}
-            handleDateChange={handleDateChange}
-          />
-          {scheduledDate && (
-            <>
-              <FormControl readOnly defaultValue={scheduledDate} />
-              <Button className="unschedule-button" onClick={() => {}}>
-                Cancel Schedule
-              </Button>
-            </>
-          )}
-          {scheduleIsReadonly && (
-            <Button
-              className="schedule-button"
-              onClick={() => setScheduleIsReadonly(false)}
-            >
-              Reschedule it!
-            </Button>
-          )}
-        </div> */}
       </FormGroup>
       <FormGroup className="action-buttons">
         {DeleteButton && <DeleteButton />}
