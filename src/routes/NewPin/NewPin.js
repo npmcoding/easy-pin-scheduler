@@ -1,12 +1,12 @@
-import React from "react";
+import React, { useState } from "react";
 import ScheduledPinForm from "../../components/ScheduledPinForm/ScheduledPinForm";
 import { createPin } from "../../libs/epsLib";
-import { usePinFields } from "../../libs/hooksLib";
+import { initialPinFormState } from "../../libs/constants";
 import { getAccessToken } from "../../libs/pinterestLib";
 import "./NewPin.css";
 
 const NewPin = ({ history }) => {
-  const [pin, updateFields] = usePinFields();
+  const [pin, setPin] = useState(initialPinFormState);
 
   const submitAction = (newPin) =>
     createPin({
@@ -19,7 +19,7 @@ const NewPin = ({ history }) => {
       <ScheduledPinForm
         history={history}
         pin={pin}
-        updateFields={updateFields}
+        updateFields={(updatedFields) => setPin({ ...pin, ...updatedFields })}
         submitAction={submitAction}
       />
     </div>

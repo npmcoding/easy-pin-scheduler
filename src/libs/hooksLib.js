@@ -13,25 +13,3 @@ export const useFormFields = (initialState) => {
     },
   ];
 };
-
-export const usePinFields = () => {
-  const initialState = {
-    note: "",
-    link: "",
-    uploadedImageName: "",
-    board: null,
-    imageURL: "",
-    scheduledDate: null,
-  };
-
-  const [fields, setValues] = useState(initialState);
-
-  return [
-    fields,
-    (updatedFields) =>
-      setValues({
-        ...fields,
-        ...updatedFields,
-      }),
-  ];
-};

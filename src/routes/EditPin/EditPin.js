@@ -2,12 +2,13 @@ import React, { useState, useEffect } from "react";
 import { API, Storage } from "aws-amplify";
 import LoaderButton from "../../components/LoaderButton/LoaderButton";
 import ScheduledPinForm from "../../components/ScheduledPinForm/ScheduledPinForm";
-import { usePinFields } from "../../libs/hooksLib";
+import { initialPinFormState } from "../../libs/constants";
 import { savePin, deletePin } from "../../libs/epsLib";
 import "./EditPin.css";
 
 const EditPin = ({ match, history }) => {
-  const [pin, updateFields] = usePinFields();
+  const [pin, setPin] = useState(initialPinFormState);
+
   const [isDeleting, setIsDeleting] = useState(false);
 
   const scheduledPinId = match.params.id;
@@ -19,17 +20,17 @@ const EditPin = ({ match, history }) => {
           Storage.vault
             .get(p.uploadedImageName)
             .then((uploadedImageURL) =>
-              updateFields({ ...p, imageURL: uploadedImageURL })
+            setPin({ ...p, imageURL: uploadedImageURL })
             );
         } else {
-          updateFields(p);
+          setPin(p);
         }
       })
       .catch((e) => {
         alert("There was a problem loading pin");
         console.error(e);
       });
-  }, [scheduledPinId, updateFields]);
+  }, [scheduledPinId]);
 
   const submitAction = (updatedPin) => savePin(updatedPin, match.params.id);
 
@@ -69,7 +70,7 @@ const EditPin = ({ match, history }) => {
       <ScheduledPinForm
         history={history}
         pin={pin}
-        updateFields={updateFields}
+        updateFields={updatedFields => setPin({...pin, ...updatedFields})}
         DeleteButton={DeleteButton}
         submitAction={submitAction}
       />
