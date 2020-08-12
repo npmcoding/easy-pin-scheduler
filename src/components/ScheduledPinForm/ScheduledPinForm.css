@@ -46,3 +46,7 @@
   color: #FFFFFF;
   background-color: #ac2925;
 }
+
+.pin-editor .invalid {
+  color: red;
+}

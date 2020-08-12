@@ -9,6 +9,7 @@ import {
 } from "react-bootstrap";
 import { handleImageUpload } from "../../libs/awsLib";
 import { useBoards } from "../../libs/boardsUtil";
+import { validateForms } from "../../libs/validationsLib";
 import LoaderButton from "../LoaderButton/LoaderButton";
 import SchedulePicker from "../SchedulePicker/SchedulePicker";
 import "./ScheduledPinForm.css";
@@ -29,20 +30,39 @@ const ScheduledPinForm = ({
     scheduledDate,
   } = pin;
 
+  const [linkValMessage, setLinkValMessage] = useState("");
+  const [imageValMessage, setImageValMessage] = useState("");
+  const [boardValMessage, setBoardValMessage] = useState("");
+
   const [isLoading, setIsLoading] = useState(false);
 
   const [boards, loadingBoards] = useBoards();
 
+  const handleBoardChange = (b) => {
+    if (boardValMessage) {
+      setBoardValMessage("");
+    }
+
+    updateFields({ board: b })
+  }
+
   const handleFileChange = (e) => {
     e.preventDefault();
+
     const currentFile = e.target.files[0];
-    handleImageUpload(currentFile, uploadedImageName).then(
-      ([newUploadedImageName, newUploadedImageURL]) =>
-        updateFields({
-          uploadedImageName: newUploadedImageName,
-          imageURL: newUploadedImageURL || imageURL,
-        })
-    );
+    if (currentFile) {
+      if (imageValMessage) {
+        setImageValMessage("");
+      }
+
+      handleImageUpload(currentFile, uploadedImageName).then(
+        ([newUploadedImageName, newUploadedImageURL]) =>
+          updateFields({
+            uploadedImageName: newUploadedImageName,
+            imageURL: newUploadedImageURL || imageURL,
+          })
+      );
+    }
   };
 
   const handleDateChange = (newDate) => {
@@ -55,10 +75,6 @@ const ScheduledPinForm = ({
     e.preventDefault();
 
     // Validate here
-    if (!board) {
-      alert("Please choose a board");
-      return;
-    }
 
     setIsLoading(true);
 
@@ -69,14 +85,23 @@ const ScheduledPinForm = ({
         ? pin.scheduledDate.toISOString()
         : undefined,
     };
+    const formValidationState = validateForms(submittedPin);
 
-    submitAction(submittedPin)
-      .then(() => history.push("/"))
-      .catch((e) => {
-        alert("There was a problem while saving pin");
-        console.error(e);
-        setIsLoading(false);
-      });
+    if (formValidationState.isValid) {
+      submitAction(submittedPin)
+        .then(() => history.push("/"))
+        .catch((e) => {
+          alert("There was a problem while saving pin");
+          console.error(e);
+          setIsLoading(false);
+        });
+    } else {
+      setLinkValMessage(formValidationState.link)
+      setImageValMessage(formValidationState.image);
+      setBoardValMessage(formValidationState.board);
+      setIsLoading();
+    }
+
   };
 
   return (
@@ -85,6 +110,7 @@ const ScheduledPinForm = ({
         <ControlLabel>Board</ControlLabel>
         <DropdownButton
           id="dropdown-basic-button"
+          className={`board-dropdown${boardValMessage ? ' error' : ''}`}
           title={board ? board.name : "Choose a board"}
           disabled={loadingBoards}
         >
@@ -93,12 +119,17 @@ const ScheduledPinForm = ({
               key={b.id}
               as="button"
               eventKey={b.id}
-              onClick={() => updateFields({ board: b })}
+              onClick={() => handleBoardChange(b)}
             >
               {b.name}
             </MenuItem>
           ))}
         </DropdownButton>
+        {boardValMessage &&
+          <div className="board-validation-message invalid">
+            {boardValMessage}
+          </div>
+        }
       </FormGroup>
       <FormGroup controlId="note">
         <ControlLabel>Description</ControlLabel>
@@ -124,6 +155,11 @@ const ScheduledPinForm = ({
           </FormControl.Static>
         )}
         <FormControl onChange={handleFileChange} type="file" />
+        {imageValMessage &&
+          <div className="image-validation-message invalid">
+            {imageValMessage}
+          </div>
+        }
       </FormGroup>
       <FormGroup>
         <SchedulePicker
