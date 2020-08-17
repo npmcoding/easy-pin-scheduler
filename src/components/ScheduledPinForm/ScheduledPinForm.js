@@ -26,6 +26,7 @@ const ScheduledPinForm = ({
   const [linkValMessage, setLinkValMessage] = useState("");
   const [imageValMessage, setImageValMessage] = useState("");
   const [boardValMessage, setBoardValMessage] = useState("");
+  const [scheduledDateValMessage, setScheduledDateValMessage] = useState("");
 
   const [isLoading, setIsLoading] = useState(false);
 
@@ -66,6 +67,9 @@ const ScheduledPinForm = ({
   };
 
   const handleDateChange = (newDate) => {
+    if (scheduledDateValMessage) {
+      setScheduledDateValMessage("");
+    }
     updateFields({
       scheduledDate: newDate,
     });
@@ -85,7 +89,6 @@ const ScheduledPinForm = ({
     };
 
     const formValidationState = validateForms(submittedPin);
-
     if (formValidationState.isValid) {
       submitAction(submittedPin)
         .then(() => history.push("/"))
@@ -98,6 +101,7 @@ const ScheduledPinForm = ({
       setLinkValMessage(formValidationState.link);
       setImageValMessage(formValidationState.image);
       setBoardValMessage(formValidationState.board);
+      setScheduledDateValMessage(formValidationState.scheduledDate);
       setIsLoading(false);
     }
   };
@@ -165,10 +169,21 @@ const ScheduledPinForm = ({
         )}
       </FormGroup>
       <FormGroup>
-        <SchedulePicker
-          scheduledDate={scheduledDate}
-          handleDateChange={handleDateChange}
-        />
+        <div
+          className={`schedule${scheduledDate ? "" : " unscheduled"}${
+            scheduledDateValMessage ? " error" : ""
+          }`}
+        >
+          <SchedulePicker
+            scheduledDate={scheduledDate}
+            handleDateChange={handleDateChange}
+          />
+          {scheduledDateValMessage && (
+            <div className="scheduledDate-validation-message invalid">
+              {scheduledDateValMessage}
+            </div>
+          )}
+        </div>
       </FormGroup>
       <FormGroup className="action-buttons">
         {DeleteButton && <DeleteButton />}

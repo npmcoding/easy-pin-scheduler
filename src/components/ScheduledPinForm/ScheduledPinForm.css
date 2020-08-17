@@ -37,9 +37,18 @@
   border-radius: 10px;
 }
 
+.pin-editor .schedule.unscheduled{
+  border-color: rgb(255, 153, 0);
+}
+
+.pin-editor .schedule.error{
+  border-color: red;
+}
+
 .pin-editor .unschedule-button {
   color: #c9302c;
   border-color: #c9302c;
+  margin-top: 20px;
 }
 
 .pin-editor .unschedule-button:hover {
@@ -48,5 +57,6 @@
 }
 
 .pin-editor .invalid {
+  padding-top: 5px;
   color: red;
 }

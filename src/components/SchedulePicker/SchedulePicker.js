@@ -67,7 +67,7 @@ const SchedulePicker = ({ scheduledDate, handleDateChange }) => {
   return (
     <ThemeProvider theme={customTheme}>
       <MuiPickersUtilsProvider utils={MomentUtils}>
-        <div className="schedule">
+        <>
           <ControlLabel>Schedule date</ControlLabel>
           <DateTimePicker
             clearable
@@ -85,7 +85,7 @@ const SchedulePicker = ({ scheduledDate, handleDateChange }) => {
               Cancel Schedule
             </Button>
           )}
-        </div>
+        </>
       </MuiPickersUtilsProvider>
     </ThemeProvider>
   );
