@@ -21,14 +21,7 @@ const ScheduledPinForm = ({
   submitAction,
   DeleteButton = null,
 }) => {
-  const {
-    note,
-    link,
-    uploadedImageName,
-    board,
-    imageURL,
-    scheduledDate,
-  } = pin;
+  const { note, link, uploadedImageName, board, imageURL, scheduledDate } = pin;
 
   const [linkValMessage, setLinkValMessage] = useState("");
   const [imageValMessage, setImageValMessage] = useState("");
@@ -43,8 +36,15 @@ const ScheduledPinForm = ({
       setBoardValMessage("");
     }
 
-    updateFields({ board: b })
-  }
+    updateFields({ board: b });
+  };
+
+  const handleLinkTextChange = (value) => {
+    if (linkValMessage) {
+      setLinkValMessage("");
+    }
+    updateFields({ link: value });
+  };
 
   const handleFileChange = (e) => {
     e.preventDefault();
@@ -96,12 +96,11 @@ const ScheduledPinForm = ({
           setIsLoading(false);
         });
     } else {
-      setLinkValMessage(formValidationState.link)
+      setLinkValMessage(formValidationState.link);
       setImageValMessage(formValidationState.image);
       setBoardValMessage(formValidationState.board);
       setIsLoading();
     }
-
   };
 
   return (
@@ -110,7 +109,7 @@ const ScheduledPinForm = ({
         <ControlLabel>Board</ControlLabel>
         <DropdownButton
           id="dropdown-basic-button"
-          className={`board-dropdown${boardValMessage ? ' error' : ''}`}
+          className={`board-dropdown${boardValMessage ? " error" : ""}`}
           title={board ? board.name : "Choose a board"}
           disabled={loadingBoards}
         >
@@ -125,11 +124,11 @@ const ScheduledPinForm = ({
             </MenuItem>
           ))}
         </DropdownButton>
-        {boardValMessage &&
+        {boardValMessage && (
           <div className="board-validation-message invalid">
             {boardValMessage}
           </div>
-        }
+        )}
       </FormGroup>
       <FormGroup controlId="note">
         <ControlLabel>Description</ControlLabel>
@@ -142,8 +141,13 @@ const ScheduledPinForm = ({
         <ControlLabel>Link URL</ControlLabel>
         <FormControl
           value={link}
-          onChange={({ target: { value } }) => updateFields({ link: value })}
+          onChange={({ target: { value } }) => handleLinkTextChange(value)}
         />
+        {linkValMessage && (
+          <div className="link-validation-message invalid">
+            {linkValMessage}
+          </div>
+        )}
       </FormGroup>
       <FormGroup>
         <ControlLabel>Image</ControlLabel>
@@ -155,11 +159,11 @@ const ScheduledPinForm = ({
           </FormControl.Static>
         )}
         <FormControl onChange={handleFileChange} type="file" />
-        {imageValMessage &&
+        {imageValMessage && (
           <div className="image-validation-message invalid">
             {imageValMessage}
           </div>
-        }
+        )}
       </FormGroup>
       <FormGroup>
         <SchedulePicker
