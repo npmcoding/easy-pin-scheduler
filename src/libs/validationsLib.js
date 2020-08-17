@@ -4,7 +4,7 @@ const validLinkRegEx = RegExp(
 );
 export const validateForms = ({ board, uploadedImageName, imageURL, link }) => {
   let formValidationState = {
-    isValid: false,
+    isValid: true,
     link: "",
     image: "",
     board: "",
@@ -19,7 +19,7 @@ export const validateForms = ({ board, uploadedImageName, imageURL, link }) => {
     };
   }
 
-  if (!uploadedImageName || !imageURL) {
+  if (!uploadedImageName && !imageURL) {
     formValidationState = {
       ...formValidationState,
       isValid: false,

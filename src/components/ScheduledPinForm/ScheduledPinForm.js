@@ -74,8 +74,6 @@ const ScheduledPinForm = ({
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    // Validate here
-
     setIsLoading(true);
 
     const submittedPin = {
@@ -85,6 +83,7 @@ const ScheduledPinForm = ({
         ? pin.scheduledDate.toISOString()
         : undefined,
     };
+
     const formValidationState = validateForms(submittedPin);
 
     if (formValidationState.isValid) {
@@ -99,7 +98,7 @@ const ScheduledPinForm = ({
       setLinkValMessage(formValidationState.link);
       setImageValMessage(formValidationState.image);
       setBoardValMessage(formValidationState.board);
-      setIsLoading();
+      setIsLoading(false);
     }
   };
 
