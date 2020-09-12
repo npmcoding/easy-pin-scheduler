@@ -19,7 +19,7 @@ const ScheduledPinForm = ({
   pin,
   updateFields,
   submitAction,
-  DeleteButton = null,
+  DeleteButton = () => null,
 }) => {
   const { note, link, uploadedImageName, board, imageURL, scheduledDate } = pin;
 
@@ -186,7 +186,7 @@ const ScheduledPinForm = ({
         </div>
       </FormGroup>
       <FormGroup className="action-buttons">
-        {DeleteButton && <DeleteButton />}
+        <DeleteButton />
         <Button
           className="cancel-button"
           bsSize="large"

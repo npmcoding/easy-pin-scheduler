@@ -6,7 +6,7 @@ import { ThemeProvider } from "@material-ui/core/styles";
 import MomentUtils from "@date-io/moment";
 import "./SchedulePicker.css";
 
-const SchedulePicker = ({ scheduledDate, handleDateChange }) => {
+const SchedulePicker = ({ scheduledDate = null, handleDateChange }) => {
   const customTheme = createMuiTheme({
     overrides: {
       MuiSvgIcon: {
