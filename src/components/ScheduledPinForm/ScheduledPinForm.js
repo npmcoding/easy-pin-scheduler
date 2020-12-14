@@ -88,8 +88,14 @@ const ScheduledPinForm = ({
         : undefined,
     };
 
-    const formValidationState = validateForms(submittedPin);
-    if (formValidationState.isValid) {
+    const {
+      isValid,
+      linkMessage,
+      imageMessage,
+      boardMessage,
+      dateMessage,
+    } = validateForms(submittedPin);
+    if (isValid) {
       submitAction(submittedPin)
         .then(() => history.push("/"))
         .catch((e) => {
@@ -98,10 +104,10 @@ const ScheduledPinForm = ({
           setIsLoading(false);
         });
     } else {
-      setLinkValMessage(formValidationState.link);
-      setImageValMessage(formValidationState.image);
-      setBoardValMessage(formValidationState.board);
-      setScheduledDateValMessage(formValidationState.scheduledDate);
+      setLinkValMessage(linkMessage);
+      setImageValMessage(imageMessage);
+      setBoardValMessage(boardMessage);
+      setScheduledDateValMessage(dateMessage);
       setIsLoading(false);
     }
   };
@@ -109,7 +115,11 @@ const ScheduledPinForm = ({
   return (
     <form className="pin-editor" onSubmit={handleSubmit}>
       <FormGroup controlId="board">
-        <ControlLabel>Board</ControlLabel>
+        <ControlLabel>
+          <span className="required-field" title="Pinterest Board - required">
+            Board
+          </span>
+        </ControlLabel>
         <DropdownButton
           id="dropdown-basic-button"
           className={`board-dropdown${boardValMessage ? " error" : ""}`}
@@ -153,7 +163,11 @@ const ScheduledPinForm = ({
         )}
       </FormGroup>
       <FormGroup>
-        <ControlLabel>Image</ControlLabel>
+        <ControlLabel>
+          <span className="required-field" title="Image - required">
+            Image
+          </span>
+        </ControlLabel>
         {imageURL && (
           <FormControl.Static>
             <a target="_blank" rel="noopener noreferrer" href={imageURL}>

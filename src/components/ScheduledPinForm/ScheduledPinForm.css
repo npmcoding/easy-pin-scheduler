@@ -37,12 +37,12 @@
   border-radius: 10px;
 }
 
-.pin-editor .schedule.unscheduled{
+.pin-editor .schedule.unscheduled {
   border-color: rgb(255, 153, 0);
 }
 
-.pin-editor .schedule.error{
-  border-color: red;
+.pin-editor .schedule.error {
+  color: #c9302c;
 }
 
 .pin-editor .unschedule-button {
@@ -52,11 +52,17 @@
 }
 
 .pin-editor .unschedule-button:hover {
-  color: #FFFFFF;
+  color: #ffffff;
   background-color: #ac2925;
 }
 
 .pin-editor .invalid {
   padding-top: 5px;
-  color: red;
+  color: #c9302c;
+}
+
+.pin-editor .required-field::after {
+  content: "*";
+  color: #c9302c;
+  padding-left: 3px;
 }
