@@ -11,10 +11,9 @@ export const validateForms = ({
   link,
   scheduledDate,
 }) => {
+  const invalidLinkFormat = !validLinkRegEx.test(link);
   const linkMessage =
-    link.length && !validLinkRegEx.test(link)
-      ? "Please enter a valid link"
-      : "";
+    link.length > 0 && invalidLinkFormat ? "Please enter a valid link" : "";
   const imageMessage =
     !uploadedImageName && !imageURL ? "Please include an image" : "";
   const boardMessage = !board ? "Please choose a board" : "";

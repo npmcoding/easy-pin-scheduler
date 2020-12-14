@@ -71,20 +71,17 @@ const ScheduledPinForm = ({
       setScheduledDateValMessage("");
     }
     updateFields({
-      scheduledDate: newDate,
+      scheduledDate: newDate === null ? null : newDate.toISOString(),
     });
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
     setIsLoading(true);
-
     const submittedPin = {
       ...pin,
       imageURL: pin.uploadedImageName ? undefined : pin.imageURL,
-      scheduledDate: pin.scheduledDate
-        ? pin.scheduledDate.toISOString()
-        : undefined,
+      scheduledDate: pin.scheduledDate || undefined,
     };
 
     const {
