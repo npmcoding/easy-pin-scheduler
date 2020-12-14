@@ -77,7 +77,6 @@ const ScheduledPinForm = ({
 
   const handleSubmit = (e) => {
     e.preventDefault();
-
     setIsLoading(true);
 
     const submittedPin = {
@@ -96,6 +95,12 @@ const ScheduledPinForm = ({
       dateMessage,
     } = validateForms(submittedPin);
     if (isValid) {
+      if (!pin.scheduledDate) {
+        alert(
+          "You have not scheduled a date and time!\nYour content won't be pinned without further action!"
+        );
+      }
+
       submitAction(submittedPin)
         .then(() => history.push("/"))
         .catch((e) => {
