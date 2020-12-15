@@ -1,7 +1,6 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import { Button } from "react-bootstrap";
-// import { createPin } from "../../libs/pinterestLib";
 import "./ScheduledPinListItem.css";
 
 const ScheduledPinListItem = ({

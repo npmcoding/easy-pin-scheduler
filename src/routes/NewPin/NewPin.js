@@ -8,11 +8,17 @@ import "./NewPin.css";
 const NewPin = ({ history }) => {
   const [pin, setPin] = useState(initialPinFormState);
 
-  const submitAction = (newPin) =>
-    createPin({
-      ...newPin,
-      accessToken: getAccessToken(),
-    });
+  const submitAction = (newPin) => {
+    const accessToken = getAccessToken();
+    if (accessToken) {
+      createPin({
+        ...newPin,
+        accessToken,
+      });
+    } else {
+      history.push("/profile");
+    }
+  };
 
   return (
     <div className="newpin">

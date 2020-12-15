@@ -7,12 +7,13 @@ import ScheduledPinListItem from "../../components/ScheduledPinListItem/Schedule
 import { connectedState } from "../../atoms/pinterestAtoms";
 import { authenticatedState } from "../../atoms/userAtoms";
 import { postPin } from "../../libs/epsLib";
+import { isLoggedIn } from "../../libs/pinterestLib";
 import "./Home.css";
 
 const Home = () => {
   const [scheduledPins, setScheduledPins] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
-  const [isConnected] = useRecoilState(connectedState);
+  const [isConnected, setIsConnected] = useRecoilState(connectedState);
   const [isAuthenticated] = useRecoilState(authenticatedState);
 
   useEffect(() => {
@@ -27,6 +28,11 @@ const Home = () => {
 
     setIsLoading(false);
   }, [isAuthenticated]);
+
+  useEffect(() => {
+    console.log('connection effect fired');
+    setIsConnected(isLoggedIn());
+  }, []);
 
   const fetchThumbnails = (pins) => {
     Promise.all(
