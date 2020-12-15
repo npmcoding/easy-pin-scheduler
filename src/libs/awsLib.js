@@ -1,8 +1,6 @@
 import Amplify, { Storage } from "aws-amplify";
 import AWS from "aws-sdk";
-import { Auth } from "aws-amplify";
 import { v4 as uuidv4 } from "uuid";
-import { ONEHOUR } from "./constants";
 import { cognito, s3, apiGateway, MAX_ATTACHMENT_SIZE } from "../config";
 const { IDENTITY_POOL_ID, REGION, USER_POOL_ID, APP_CLIENT_ID } = cognito;
 
@@ -85,48 +83,3 @@ export const handleImageUpload = async (currentFile, existingImage) => {
   return [newImage, newImageURL];
 };
 
-export const createShortURL = async (awsKey) => {
-  /***
-   * get signed url of target image, then set as
-   * website redirect location
-   ***/
-
-  try {
-    const {
-      idToken: { jwtToken },
-    } = await Auth.currentSession();
-    initUserPoolUser(jwtToken);
-
-    const AWSs3 = new AWS.S3();
-
-    const redirectURL = await AWSs3.getSignedUrlPromise("getObject", {
-      Bucket: s3.BUCKET,
-      Key: awsKey,
-    });
-    // console.log({ redirectURL }, redirectURL.length);
-
-    return new Promise((resolve) => {
-      const key = uuidv4();
-      const params = {
-        Bucket: s3.IMG_BUCKET,
-        Key: key,
-        Expires: new Date(Date.now() + ONEHOUR),
-        WebsiteRedirectLocation: redirectURL,
-      };
-      AWSs3.putObject(params, function (err) {
-        if (err) {
-          console.log(err, err.stack); // an error occurred
-          resolve(null);
-        } else {
-          // console.log(key, data); // successful response
-          resolve(
-            `http://${s3.IMG_BUCKET}.s3-website.${s3.REGION}.amazonaws.com/${key}`
-          );
-        }
-      });
-    });
-  } catch (e) {
-    alert(e);
-    console.warn(e);
-  }
-};
